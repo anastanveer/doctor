@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REVISE MSRA • Dashboard</title>
+  <link rel="stylesheet" href="styles/custom.css" />
+</head>
+<body data-page="home">
+
+  <div data-include="partials/header.html"></div>
+
+  <!-- Page -->
+  <main class="page">
+    <div class="container">
+
+      <!-- Welcome + streak pills -->
+      <section class="welcome-row">
+        <h1 class="welcome-title">Welcome back, Muhammad Tayyab</h1>
+
+        <div class="streak-row">
+          <div class="streak-pill streak-pill--orange">
+            <span class="streak-num">24</span>
+            <span class="streak-text">Current streak 🔥</span>
+          </div>
+
+          <div class="streak-pill streak-pill--peach">
+            <span class="streak-num">24</span>
+            <span class="streak-text">Record streak 🏆</span>
+          </div>
+
+          <div class="streak-pill streak-pill--mint">
+            <span class="streak-num">34</span>
+            <span class="streak-text">days until your exam</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Top 3 cards -->
+      <section class="cards-3">
+        <a class="big-card big-card--teal" href="#">
+          <div class="big-card__head">Question bank</div>
+          <p class="big-card__text">
+            Test yourself. Over 3,000 questions designed to replicate the official MSRA exam in style and content.
+          </p>
+          <span class="big-card__arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a class="big-card big-card--green" href="#">
+          <div class="big-card__head">Revision notes</div>
+          <p class="big-card__text">
+            Study. An extensive library of revision notes with a focus on commonly examined topics.
+          </p>
+          <span class="big-card__arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a class="big-card big-card--orange" href="#">
+          <div class="big-card__head">Mock papers</div>
+          <p class="big-card__text">
+            Prepare. A collection of mock papers to ensure you excel in the official MSRA exam.
+          </p>
+          <span class="big-card__arrow" aria-hidden="true">→</span>
+        </a>
+      </section>
+
+      <!-- Score row (3 cards) -->
+      <section class="cards-3 cards-3--equal">
+
+        <!-- Mean score -->
+        <article class="panel panel--pale">
+          <header class="panel__header">
+            <h2 class="panel__title">Mean score</h2>
+            <p class="panel__sub">Your average score.</p>
+          </header>
+
+          <div class="donut-wrap">
+            <div class="donut" style="--p:80;">
+              <div class="donut__center">
+                <div class="donut__value">80%</div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Performance summary -->
+        <article class="panel panel--pale">
+          <header class="panel__header">
+            <h2 class="panel__title">Performance summary</h2>
+            <p class="panel__sub">How your score compares to others</p>
+          </header>
+
+          <div class="percentile-chip">62nd <span>percentile</span></div>
+
+          <div class="histogram">
+            <!-- bars -->
+            <div class="histogram__bars">
+              <!-- left small -->
+              <span class="bar" style="--h:2;  --c:var(--h-red);"></span>
+              <span class="bar" style="--h:3;  --c:var(--h-red);"></span>
+              <span class="bar" style="--h:4;  --c:var(--h-orange);"></span>
+              <span class="bar" style="--h:6;  --c:var(--h-orange);"></span>
+              <span class="bar" style="--h:8;  --c:var(--h-yellow);"></span>
+              <span class="bar" style="--h:10; --c:var(--h-yellow);"></span>
+              <span class="bar" style="--h:13; --c:var(--h-yellow);"></span>
+              <span class="bar" style="--h:16; --c:var(--h-lime);"></span>
+              <span class="bar" style="--h:18; --c:var(--h-lime);"></span>
+              <span class="bar" style="--h:20; --c:var(--h-lime);"></span>
+              <span class="bar" style="--h:21; --c:var(--h-lime);"></span>
+              <span class="bar" style="--h:22; --c:var(--h-green);"></span>
+              <span class="bar" style="--h:23; --c:var(--h-green);"></span>
+              <span class="bar" style="--h:22; --c:var(--h-green);"></span>
+              <span class="bar" style="--h:20; --c:var(--h-green);"></span>
+              <span class="bar" style="--h:17; --c:var(--h-green);"></span>
+              <span class="bar" style="--h:12; --c:var(--h-green);"></span>
+              <span class="bar" style="--h:8;  --c:var(--h-green);"></span>
+              <span class="bar" style="--h:5;  --c:var(--h-green);"></span>
+            </div>
+
+            <!-- marker -->
+            <div class="histogram__marker" style="--x:72;">
+              <span class="histogram__label">Your score</span>
+              <span class="histogram__line"></span>
+            </div>
+
+            <!-- axis -->
+            <div class="histogram__axis">
+              <span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span>
+              <span>50%</span><span>60%</span><span>70%</span><span>80%</span><span>90%</span><span>100%</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- MSRA Mastery -->
+        <article class="panel panel--mint">
+          <div class="mastery-top">
+            <div class="avatar-stack" aria-hidden="true">
+              <span class="av av1"></span>
+              <span class="av av2"></span>
+              <span class="av av3"></span>
+              <span class="av av4"></span>
+              <span class="av av5"></span>
+            </div>
+          </div>
+
+          <h2 class="mastery-title">MSRA Mastery</h2>
+          <p class="mastery-text">
+            With competition tougher than ever, the MSRA Mastery Course equips you with high-yield learning,
+            clinchers, recalls, and expert strategies to excel.
+          </p>
+
+          <button class="btn-dark" type="button">
+            <span class="btn-ico" aria-hidden="true">⤢</span>
+            Learn more
+          </button>
+
+          <p class="mastery-foot">Secure your dream NHS job!</p>
+        </article>
+      </section>
+
+      <!-- Performance by topic -->
+      <section class="topic-section">
+        <h2 class="section-title">Performance by topic</h2>
+        <p class="section-sub">
+          Strengthen your weak spots. Your performance compared to others shown as a percentage of correct answers.
+        </p>
+
+        <div class="legend">
+          <span class="legend-item"><i class="dot dot--green"></i> Your score</span>
+          <span class="legend-item"><i class="dot dot--yellow"></i> All users</span>
+        </div>
+
+        <div class="topic-list">
+
+          <!-- Item -->
+          <article class="topic-card">
+            <div class="topic-meta">
+              <div class="topic-name">Professional Dilemmas</div>
+              <div class="topic-done">You have completed <strong>0</strong> out of <strong>255</strong> questions for this topic.</div>
+            </div>
+
+            <div class="bar-row">
+              <div class="barline barline--green">
+                <span class="barfill" style="width:0%"></span>
+              </div>
+              <div class="barline barline--yellow">
+                <span class="barfill" style="width:42%"></span>
+              </div>
+
+              <div class="barvals">
+                <span>0%</span>
+                <span>42%</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="topic-card">
+            <div class="topic-meta">
+              <div class="topic-name">Cardiology</div>
+              <div class="topic-done">You have completed <strong>118</strong> out of <strong>161</strong> questions for this topic.</div>
+            </div>
+
+            <div class="bar-row">
+              <div class="barline barline--green">
+                <span class="barfill" style="width:84%"></span>
+              </div>
+              <div class="barline barline--yellow">
+                <span class="barfill" style="width:73%"></span>
+              </div>
+
+              <div class="barvals">
+                <span>84%</span>
+                <span>73%</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="topic-card">
+            <div class="topic-meta">
+              <div class="topic-name">Dermatology</div>
+              <div class="topic-done">You have completed <strong>142</strong> out of <strong>142</strong> questions for this topic.</div>
+            </div>
+
+            <div class="bar-row">
+              <div class="barline barline--green">
+                <span class="barfill" style="width:74%"></span>
+              </div>
+              <div class="barline barline--yellow">
+                <span class="barfill" style="width:74%"></span>
+              </div>
+
+              <div class="barvals">
+                <span>74%</span>
+                <span>74%</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="topic-card">
+            <div class="topic-meta">
+              <div class="topic-name">Respiratory</div>
+              <div class="topic-done">You have completed <strong>110</strong> out of <strong>158</strong> questions for this topic.</div>
+            </div>
+
+            <div class="bar-row">
+              <div class="barline barline--green">
+                <span class="barfill" style="width:77%"></span>
+              </div>
+              <div class="barline barline--yellow">
+                <span class="barfill" style="width:75%"></span>
+              </div>
+
+              <div class="barvals">
+                <span>77%</span>
+                <span>75%</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="topic-card">
+            <div class="topic-meta">
+              <div class="topic-name">Rheumatology / MSK</div>
+              <div class="topic-done">You have completed <strong>138</strong> out of <strong>233</strong> questions for this topic.</div>
+            </div>
+
+            <div class="bar-row">
+              <div class="barline barline--green">
+                <span class="barfill" style="width:84%"></span>
+              </div>
+              <div class="barline barline--yellow">
+                <span class="barfill" style="width:75%"></span>
+              </div>
+
+              <div class="barvals">
+                <span>84%</span>
+                <span>75%</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="topic-card">
+            <div class="topic-meta">
+              <div class="topic-name">Urology</div>
+              <div class="topic-done">You have completed <strong>22</strong> out of <strong>44</strong> questions for this topic.</div>
+            </div>
+
+            <div class="bar-row">
+              <div class="barline barline--green">
+                <span class="barfill" style="width:86%"></span>
+              </div>
+              <div class="barline barline--yellow">
+                <span class="barfill" style="width:83%"></span>
+              </div>
+
+              <div class="barvals">
+                <span>86%</span>
+                <span>83%</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- Advanced insights -->
+      <section class="insights-section">
+        <div class="section-head">
+          <h2 class="section-title">Advanced insights</h2>
+          <p class="section-sub">Deeper intelligence on your momentum, precision, and pace.</p>
+        </div>
+
+        <div class="insights-grid">
+          <article class="insight-card insight-card--lime">
+            <div class="insight-top">
+              <span class="insight-tag">Accuracy drift</span>
+              <span class="insight-chip">-6%</span>
+            </div>
+            <h3 class="insight-title">Precision is dipping late</h3>
+            <p class="insight-text">Final 20% of sessions show slower recall. Rebalance with mixed-timed sets.</p>
+            <div class="sparkline">
+              <span class="spark" style="--h:18"></span>
+              <span class="spark" style="--h:26"></span>
+              <span class="spark" style="--h:14"></span>
+              <span class="spark" style="--h:22"></span>
+              <span class="spark" style="--h:12"></span>
+              <span class="spark" style="--h:16"></span>
+              <span class="spark" style="--h:8"></span>
+            </div>
+          </article>
+
+          <article class="insight-card insight-card--sky">
+            <div class="insight-top">
+              <span class="insight-tag">Time-to-answer</span>
+              <span class="insight-chip">82s</span>
+            </div>
+            <h3 class="insight-title">Speed corridor</h3>
+            <p class="insight-text">You remain in the optimal speed band for 67% of questions.</p>
+            <div class="speed-track">
+              <span class="speed-dot" style="--x:18"></span>
+              <span class="speed-dot" style="--x:38"></span>
+              <span class="speed-dot" style="--x:62"></span>
+              <span class="speed-dot" style="--x:78"></span>
+            </div>
+            <div class="speed-labels">
+              <span>Fast</span>
+              <span>Balanced</span>
+              <span>Slow</span>
+            </div>
+          </article>
+
+          <article class="insight-card insight-card--peach">
+            <div class="insight-top">
+              <span class="insight-tag">Recall strength</span>
+              <span class="insight-chip">High</span>
+            </div>
+            <h3 class="insight-title">Retention ladder</h3>
+            <p class="insight-text">Topic revisits within 72 hours raise correct answers by 19%.</p>
+            <div class="ladder">
+              <span class="ladder-step"></span>
+              <span class="ladder-step"></span>
+              <span class="ladder-step"></span>
+              <span class="ladder-step"></span>
+              <span class="ladder-step"></span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="progress-lab">
+        <div class="section-head">
+          <h2 class="section-title">E-Prop progress lab</h2>
+          <p class="section-sub">An advanced view of growth, stability, and readiness.</p>
+        </div>
+
+        <div class="lab-grid">
+          <article class="lab-card">
+            <div class="lab-head">
+              <h3>Growth trajectory</h3>
+              <span class="lab-chip">+14.2%</span>
+            </div>
+            <p class="lab-text">Weekly composite score, normalized by difficulty band.</p>
+            <div class="lab-chart">
+              <svg viewBox="0 0 420 200" role="img" aria-label="Growth chart">
+                <defs>
+                  <linearGradient id="labFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#5ad8b5" stop-opacity=".75"/>
+                    <stop offset="100%" stop-color="#eaf8f2" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path class="lab-area" d="M0 150 L60 130 L120 132 L180 108 L240 116 L300 90 L360 78 L420 60 L420 200 L0 200 Z"></path>
+                <path class="lab-line" d="M0 150 L60 130 L120 132 L180 108 L240 116 L300 90 L360 78 L420 60"></path>
+                <circle cx="420" cy="60" r="6" class="lab-dot"></circle>
+              </svg>
+            </div>
+            <div class="lab-axis">
+              <span>Week 1</span>
+              <span>Week 8</span>
+            </div>
+          </article>
+
+          <article class="lab-card lab-card--matrix">
+            <div class="lab-head">
+              <h3>Mastery matrix</h3>
+              <span class="lab-chip">79%</span>
+            </div>
+            <p class="lab-text">Heatmap of confidence vs accuracy.</p>
+            <div class="matrix-grid">
+              <span class="cell c1"></span>
+              <span class="cell c2"></span>
+              <span class="cell c3"></span>
+              <span class="cell c2"></span>
+              <span class="cell c4"></span>
+              <span class="cell c3"></span>
+              <span class="cell c4"></span>
+              <span class="cell c5"></span>
+              <span class="cell c4"></span>
+              <span class="cell c2"></span>
+              <span class="cell c3"></span>
+              <span class="cell c4"></span>
+              <span class="cell c5"></span>
+              <span class="cell c4"></span>
+              <span class="cell c3"></span>
+              <span class="cell c2"></span>
+            </div>
+            <div class="matrix-legend">
+              <span>Low</span>
+              <span>High</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="journey-section">
+        <div class="section-head">
+          <h2 class="section-title">Strategy timeline</h2>
+          <p class="section-sub">A unique step-by-step route to keep you ahead of the cohort.</p>
+        </div>
+
+        <div class="journey-grid">
+          <article class="journey-card">
+            <span class="journey-step">01</span>
+            <h3>Precision sprint</h3>
+            <p>Target the top-3 weak topics with timed mixed sets.</p>
+          </article>
+          <article class="journey-card">
+            <span class="journey-step">02</span>
+            <h3>Recall lock</h3>
+            <p>Repeat missed questions after 48 hours for deep encoding.</p>
+          </article>
+          <article class="journey-card">
+            <span class="journey-step">03</span>
+            <h3>Exam rehearsal</h3>
+            <p>Weekly full mocks with 10-min review loops.</p>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+
+  <script src="scripts/includes.js"></script>
+</body>
+</html>

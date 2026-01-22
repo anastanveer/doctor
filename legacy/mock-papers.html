@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REVISE MSRA • Mock papers</title>
+  <link rel="stylesheet" href="styles/custom.css" />
+</head>
+<body data-page="mock-papers">
+
+  <div data-include="partials/header.html"></div>
+
+  <!-- ✅ HERO BAR -->
+  <section class="page-hero page-hero--orange">
+    <div class="page-hero__inner">
+      <h1 class="page-hero__title">Mock papers</h1>
+    </div>
+  </section>
+
+  <!-- ✅ PAGE BODY -->
+  <main class="page mock-page">
+    <div class="container mock-layout">
+
+      <!-- LEFT CONTENT -->
+      <section class="mock-content">
+        <h2 class="mock-title">Candidate instructions</h2>
+
+        <p class="mock-intro">
+          Thank you for taking the time to complete the MSRA Clinical Problem Solving mock papers.
+          They have been designed to replicate the official Clinical Problem Solving exam questions
+          as closely as possible in both content & format.
+        </p>
+
+        <ul class="mock-list">
+          <li>We recommend attempting these mock papers under exam conditions.</li>
+          <li>
+            Each mock paper includes <strong>97 items</strong>,
+            and <strong>should be completed in 75 minutes</strong>.
+          </li>
+          <li><strong>There is no negative marking.</strong></li>
+          <li>
+            The answers and rationale will be presented for review at the end of the paper.
+          </li>
+        </ul>
+
+        <p class="mock-note">
+          The Revise MSRA mock papers focus on <strong>clinchers, recalls</strong> and
+          question subject areas known to come up <strong>frequently in the MSRA exam</strong>,
+          so be sure to review the answers and key learning summaries after completing each paper.
+        </p>
+
+        <h3 class="mock-subtitle">Select paper</h3>
+
+        <div class="paper-selector">
+          <button class="paper-btn is-active" type="button">1</button>
+          <button class="paper-btn" type="button">2</button>
+          <button class="paper-btn" type="button">3</button>
+          <button class="paper-btn" type="button">4</button>
+          <button class="paper-btn" type="button">5</button>
+          <button class="paper-btn" type="button">6</button>
+        </div>
+      </section>
+
+      <!-- RIGHT CARD -->
+      <aside class="mock-aside">
+        <div class="mastery-card">
+          <div class="mastery-avatars">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+
+          <h3 class="mastery-title">MSRA Mastery</h3>
+
+          <p class="mastery-text">
+            With competition tougher than ever, the MSRA Mastery Course equips you with
+            high-yield learning, clinchers, recalls, and expert strategies to excel.
+          </p>
+
+          <button class="mastery-btn" type="button">
+            <span class="btn-ico">↗</span>
+            Learn more
+          </button>
+
+          <div class="mastery-foot">Secure your dream NHS job!</div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <div data-include="partials/footer.html"></div>
+
+  <script src="scripts/includes.js"></script>
+  <!-- Optional: paper active switch (UI only) -->
+  <script>
+    document.querySelectorAll('.paper-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.paper-btn').forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+      });
+    });
+  </script>
+
+</body>
+</html>

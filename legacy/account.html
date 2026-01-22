@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REVISE MSRA • Your account</title>
+  <link rel="stylesheet" href="styles/custom.css" />
+</head>
+<body data-page="account">
+
+  <div data-include="partials/header.html"></div>
+
+  <!-- ✅ BODY -->
+  <main class="page">
+    <div class="account-wrap">
+
+      <!-- top heading + signout -->
+      <div class="account-head">
+        <h1 class="account-title">Your account</h1>
+        <div class="account-actions">
+          <button class="btn-signout" type="button">
+            <span class="btn-ico">↗</span>
+            Sign out
+          </button>
+        </div>
+      </div>
+
+      <!-- tabs -->
+      <div class="account-tabs" role="tablist" aria-label="Account tabs">
+        <button class="account-tab is-active" type="button" data-tab="profile" role="tab" aria-selected="true">
+          Profile
+        </button>
+        <button class="account-tab" type="button" data-tab="login" role="tab" aria-selected="false">
+          Login details
+        </button>
+        <button class="account-tab" type="button" data-tab="membership" role="tab" aria-selected="false">
+          Membership
+        </button>
+      </div>
+
+      <!-- ✅ TAB: PROFILE -->
+      <section class="account-card" data-panel="profile" role="tabpanel">
+        <form class="account-form">
+
+          <div class="form-row">
+            <label for="firstName">First name</label>
+            <input id="firstName" type="text" value="Muhammad Tayyab" />
+          </div>
+
+          <div class="form-row">
+            <label for="lastName">Last name</label>
+            <input id="lastName" type="text" value="Shahzad" />
+          </div>
+
+          <div class="form-row">
+            <label for="displayName">Display name</label>
+            <div class="form-help">This is what is displayed throughout the web application</div>
+            <input id="displayName" type="text" value="Muhammad Tayyab Shahzad" />
+          </div>
+
+          <div class="form-row">
+            <label for="examDate">Date of your MSRA exam</label>
+            <div class="form-help">If entered, a countdown is displayed on your dashboard</div>
+            <input id="examDate" type="date" value="2026-02-20" />
+          </div>
+
+          <div class="form-row">
+            <label for="photo">Profile photo</label>
+            <div class="form-help">Minimum size 160 x 160 pixels</div>
+            <input id="photo" type="file" />
+          </div>
+
+          <button class="btn-primary" type="button">Save profile</button>
+        </form>
+      </section>
+
+      <!-- ✅ TAB: LOGIN DETAILS -->
+      <section class="account-card" data-panel="login" role="tabpanel" style="display:none;">
+        <form class="account-form">
+
+          <div class="form-row">
+            <label for="email">Email</label>
+            <div class="form-help">This is used to login</div>
+            <input id="email" type="email" value="mohammadtyayabshahzad@gmail.com" />
+          </div>
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="btn-primary" type="button">Save email</button>
+            <button class="btn-ghost" type="button">Reset password</button>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- ✅ TAB: MEMBERSHIP -->
+      <section class="account-card" data-panel="membership" role="tabpanel" style="display:none;">
+        <div class="membership-note">
+          You have access to the MSRA site until <strong>02/05/2026</strong>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div data-include="partials/footer.html"></div>
+
+  <script src="scripts/includes.js"></script>
+  <script>
+    const tabs = document.querySelectorAll('.account-tab');
+    const panels = document.querySelectorAll('[data-panel]');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-tab');
+
+        tabs.forEach(t => {
+          t.classList.remove('is-active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('is-active');
+        tab.setAttribute('aria-selected', 'true');
+
+        panels.forEach(p => {
+          p.style.display = (p.getAttribute('data-panel') === target) ? '' : 'none';
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

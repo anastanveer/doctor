@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REVISE MSRA • MCQ session</title>
+  <link rel="stylesheet" href="styles/custom.css" />
+</head>
+<body data-page="mcq-session">
+
+  <div data-include="partials/header.html"></div>
+
+  <main class="mcq-session">
+    <div class="container">
+      <section class="mcq-session__top">
+        <div>
+          <p class="mcq-kicker">Live MCQ session</p>
+          <h1 class="mcq-session__title">Timed, flagged, fully responsive</h1>
+        </div>
+        <div class="mcq-session__meta">
+          <span class="meta-pill">Question 7 of 60</span>
+          <span class="meta-pill meta-pill--accent">00:42 / 75:00</span>
+        </div>
+      </section>
+
+      <div class="mcq-session__layout">
+        <section class="mcq-session__card-stack">
+          <article class="mcq-card active" data-index="1" data-label="Cardiology">
+            <div class="mcq-session__header">
+              <div>
+                <p class="mcq-session__topic">
+                  <span>Topic: Cardiology</span> • <span>Difficulty: Advanced</span>
+                </p>
+                <h2 class="mcq-session__question" data-question-title></h2>
+              </div>
+              <button class="flag-btn" type="button" aria-pressed="false">
+                <span aria-hidden="true">⚑</span>
+                <span>Mark for review</span>
+              </button>
+            </div>
+            <div class="mcq-session__options" data-options></div>
+            <div class="mcq-progress">
+              <span data-progress-current></span>/<span data-progress-total></span>
+              <div class="progress-track">
+                <span class="progress-fill" data-progress-fill></span>
+              </div>
+            </div>
+            <div class="mcq-excerpt">
+              <h4>eProp insight</h4>
+              <p data-excerpt></p>
+              <div class="mcq-metrics" data-metrics></div>
+            </div>
+          </article>
+        </section>
+
+        <aside class="mcq-session__sidebar">
+          <h3>Flagged questions</h3>
+          <ul class="flagged-list">
+            <li class="flagged-list__empty">Flag droplets appear here</li>
+          </ul>
+          <p class="sidebar-note">Flagged questions carry into your review summary and appear in analytics.</p>
+        </aside>
+      </div>
+
+      <section class="mcq-session__footer">
+        <div class="mcq-session__info">
+          <p>Answer reveals unlock after submission.</p>
+          <p>Shortcuts: 1-4 choose an option, F flags/unflags, Space pauses the timer.</p>
+        </div>
+        <button class="btn-primary-dark" type="button">Submit answer</button>
+      </section>
+
+      <section class="keyboard-section">
+        <div>
+          <h3>Keyboard shortcuts</h3>
+          <p>1-4 choose the answer, F flags the question, Space pauses/resumes the timer.</p>
+        </div>
+        <div class="keyboard-grid">
+          <span><strong>1</strong> Option A</span>
+          <span><strong>2</strong> Option B</span>
+          <span><strong>3</strong> Option C</span>
+          <span><strong>4</strong> Option D</span>
+          <span><strong>F</strong> Flag / unflag</span>
+          <span><strong>Space</strong> Pause / resume</span>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div data-include="partials/footer.html"></div>
+
+  <script src="scripts/includes.js"></script>
+  <script>
+    const mcqCard = document.querySelector('.mcq-card');
+    const flaggedList = document.querySelector('.flagged-list');
+    const optionContainer = mcqCard.querySelector('[data-options]');
+    const questionTitle = mcqCard.querySelector('[data-question-title]');
+    const excerptText = mcqCard.querySelector('[data-excerpt]');
+    const metricsContainer = mcqCard.querySelector('[data-metrics]');
+    const flagBtn = mcqCard.querySelector('.flag-btn');
+    const progressCurrent = mcqCard.querySelector('[data-progress-current]');
+    const progressTotal = mcqCard.querySelector('[data-progress-total]');
+    const progressFill = mcqCard.querySelector('[data-progress-fill]');
+
+    const questions = [
+      {
+        topic: 'Cardiology',
+        difficulty: 'Advanced',
+        question: 'Which valve replacement option gives the longest durability for a 54-year-old with aortic stenosis?',
+        options: [
+          'Mechanical valve + Warfarin',
+          'Bioprosthetic valve',
+          'Ross procedure',
+          'Transcatheter AVR'
+        ]
+        ,
+        insight: 'Focusing on long-term durability mirrors the eProp coaching notes for cardiology reviews.',
+        metrics: ['Confidence 82%', 'Review window 36h']
+      },
+      {
+        topic: 'Rheumatology',
+        difficulty: 'Recall',
+        question: 'A 40-year-old on methotrexate develops a persistent dry cough. What is the next best step?',
+        options: [
+          'Increase methotrexate dose',
+          'Hold methotrexate and arrange CXR',
+          'Add azathioprine',
+          'Start oral prednisolone'
+        ]
+      },
+      {
+        topic: 'Pharmacology',
+        difficulty: 'Precision',
+        question: 'Which antibiotic must be avoided in acute porphyria due to neurotoxic risk?',
+        options: [
+          'Doxycycline',
+          'Ceftriaxone',
+          'Amoxicillin',
+          'Co-amoxiclav'
+        ]
+        ,
+        insight: 'Acute porphyria carries neurotoxicity risk, so spotting prohibited antibiotics builds exam instinct.',
+        metrics: ['Confidence 67%', 'Review window 48h']
+      }
+    ];
+
+    let currentIndex = 0;
+    const flagged = new Set();
+
+    const updateFlaggedList = () => {
+      if (!flaggedList) return;
+      flaggedList.innerHTML = '';
+      if (!flagged.size) {
+        const placeholder = document.createElement('li');
+        placeholder.className = 'flagged-list__empty';
+        placeholder.textContent = 'Flag droplets appear here';
+        flaggedList.appendChild(placeholder);
+        return;
+      }
+      flagged.forEach((idx) => {
+        const entry = document.createElement('li');
+        entry.textContent = `Q${idx + 1} • ${questions[idx].topic}`;
+        flaggedList.appendChild(entry);
+      });
+    };
+
+    const renderQuestion = (index) => {
+      const item = questions[index];
+      mcqCard.dataset.index = index + 1;
+      mcqCard.dataset.label = item.topic;
+      questionTitle.textContent = item.question;
+      optionContainer.innerHTML = '';
+      item.options.forEach((text, idx) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.dataset.key = idx + 1;
+        button.textContent = text;
+        optionContainer.appendChild(button);
+      });
+      progressCurrent.textContent = index + 1;
+      progressTotal.textContent = questions.length;
+      progressFill.style.width = `${((index + 1) / questions.length) * 100}%`;
+      excerptText.textContent = item.insight;
+      metricsContainer.innerHTML = '';
+      item.metrics.forEach((metric) => {
+        const span = document.createElement('span');
+        span.textContent = metric;
+        metricsContainer.appendChild(span);
+      });
+      flagBtn.setAttribute('aria-pressed', flagged.has(index) ? 'true' : 'false');
+      flagBtn.classList.toggle('is-flagged', flagged.has(index));
+    };
+
+    const moveToNextQuestion = () => {
+      currentIndex = (currentIndex + 1) % questions.length;
+      renderQuestion(currentIndex);
+      updateFlaggedList();
+    };
+
+    const handleOptionSelection = (button) => {
+      button.classList.add('is-active');
+      setTimeout(() => {
+        button.classList.remove('is-active');
+        moveToNextQuestion();
+      }, 250);
+    };
+
+    optionContainer.addEventListener('click', (event) => {
+      const button = event.target.closest('button');
+      if (!button) return;
+      handleOptionSelection(button);
+    });
+
+    flagBtn.addEventListener('click', () => {
+      const pressed = flagBtn.getAttribute('aria-pressed') === 'true';
+      flagBtn.setAttribute('aria-pressed', (!pressed).toString());
+      flagBtn.classList.toggle('is-flagged', !pressed);
+      if (pressed) {
+        flagged.delete(currentIndex);
+      } else {
+        flagged.add(currentIndex);
+      }
+      updateFlaggedList();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (/^[1-4]$/.test(event.key)) {
+        const options = optionContainer.querySelectorAll('button');
+        const target = options[Number(event.key) - 1];
+        if (target) {
+          handleOptionSelection(target);
+        }
+      }
+      if (event.key.toLowerCase() === 'f') {
+        flagBtn.click();
+      }
+    });
+
+    renderQuestion(currentIndex);
+    updateFlaggedList();
+  </script>
+</body>
+</html>
