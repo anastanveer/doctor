@@ -42,16 +42,16 @@
               <img data-question-image alt="" />
             </div>
             <div class="mcq-session__options" data-options></div>
+            <div class="mcq-answer" data-answer hidden>
+              <div class="mcq-answer__status" data-answer-status></div>
+              <div class="mcq-answer__correct" data-answer-correct></div>
+              <div class="mcq-answer__explanation" data-answer-explanation></div>
+            </div>
             <div class="mcq-progress">
               <span data-progress-current></span>/<span data-progress-total></span>
               <div class="progress-track">
                 <span class="progress-fill" data-progress-fill></span>
               </div>
-            </div>
-            <div class="mcq-excerpt">
-              <h4>eProp insight</h4>
-              <p data-excerpt></p>
-              <div class="mcq-metrics" data-metrics></div>
             </div>
           </article>
         </section>
@@ -71,6 +71,7 @@
           <p>Shortcuts: 1-4 choose an option, F flags/unflags, Space pauses the timer.</p>
         </div>
         <button class="btn-primary-dark" type="button" id="mcq-submit">Submit answer</button>
+        <button class="btn-outline" type="button" id="mcq-next" hidden disabled>Next question</button>
       </section>
 
       <section class="mcq-complete" id="mcq-complete" hidden>
@@ -112,8 +113,6 @@
     const difficultyText = mcqCard.querySelector('[data-difficulty]');
     const mediaWrap = mcqCard.querySelector('[data-question-media]');
     const mediaImage = mcqCard.querySelector('[data-question-image]');
-    const excerptText = mcqCard.querySelector('[data-excerpt]');
-    const metricsContainer = mcqCard.querySelector('[data-metrics]');
     const flagBtn = mcqCard.querySelector('.flag-btn');
     const progressCurrent = mcqCard.querySelector('[data-progress-current]');
     const progressTotal = mcqCard.querySelector('[data-progress-total]');
@@ -121,10 +120,15 @@
     const progressPill = document.querySelector('[data-progress-pill]');
     const timerPill = document.querySelector('[data-timer-pill]');
     const submitButton = document.getElementById('mcq-submit');
+    const nextButton = document.getElementById('mcq-next');
     const completePanel = document.getElementById('mcq-complete');
     const sessionLayout = document.querySelector('.mcq-session__layout');
     const sessionFooter = document.querySelector('.mcq-session__footer');
     const keyboardSection = document.querySelector('.keyboard-section');
+    const answerPanel = mcqCard.querySelector('[data-answer]');
+    const answerStatus = mcqCard.querySelector('[data-answer-status]');
+    const answerCorrect = mcqCard.querySelector('[data-answer-correct]');
+    const answerExplanation = mcqCard.querySelector('[data-answer-explanation]');
 
     const questions = @json($mcqQuestions);
     let currentIndex = 0;
@@ -132,6 +136,7 @@
     let remainingSeconds = questions.length * 90;
     let timerId = null;
     let isPaused = false;
+    let hasSubmitted = false;
     let questionStart = Date.now();
 
     const formatTime = (seconds) => {
@@ -322,20 +327,9 @@
       if (progressPill) {
         progressPill.textContent = `Question ${index + 1} of ${questions.length}`;
       }
-      excerptText.textContent = item.insight;
-      metricsContainer.innerHTML = '';
-      if (item.metrics && item.metrics.length) {
-        item.metrics.forEach((metric) => {
-          const span = document.createElement('span');
-          span.textContent = metric;
-          metricsContainer.appendChild(span);
-        });
-        metricsContainer.hidden = false;
-      } else {
-        metricsContainer.hidden = true;
-      }
       flagBtn.setAttribute('aria-pressed', flagged.has(index) ? 'true' : 'false');
       flagBtn.classList.toggle('is-flagged', flagged.has(index));
+      resetAnswerState();
     };
 
     const completeSession = () => {
@@ -349,6 +343,10 @@
       if (submitButton) {
         submitButton.disabled = true;
         submitButton.textContent = 'Completed';
+      }
+      if (nextButton) {
+        nextButton.disabled = true;
+        nextButton.hidden = true;
       }
       if (sessionLayout) sessionLayout.hidden = true;
       if (sessionFooter) sessionFooter.hidden = true;
@@ -368,6 +366,9 @@
     };
 
     const handleOptionSelection = (button) => {
+      if (hasSubmitted) {
+        return;
+      }
       if (optionContainer.classList.contains('is-multiple')) {
         button.classList.toggle('is-active');
         return;
@@ -423,6 +424,9 @@
     startTimer();
 
     submitButton?.addEventListener('click', () => {
+      if (hasSubmitted) {
+        return;
+      }
       const item = questions[currentIndex];
       if (!item) return;
       const type = item.type || 'single';
@@ -492,7 +496,199 @@
           body: JSON.stringify(payload),
         }).catch(() => {});
       }
+      revealAnswer(item, payload);
+    });
+
+    nextButton?.addEventListener('click', () => {
+      if (!hasSubmitted) {
+        return;
+      }
       moveToNextQuestion();
     });
+
+    function resetAnswerState() {
+      hasSubmitted = false;
+      optionContainer.classList.remove('is-locked');
+      optionContainer.querySelectorAll('button').forEach((button) => {
+        button.classList.remove('is-correct', 'is-wrong');
+        button.disabled = false;
+      });
+      optionContainer.querySelectorAll('select').forEach((select) => {
+        select.disabled = false;
+      });
+      optionContainer.querySelectorAll('.order-item').forEach((item) => {
+        item.draggable = true;
+      });
+      const shortInput = optionContainer.querySelector('.short-input');
+      if (shortInput) {
+        shortInput.disabled = false;
+      }
+      if (answerPanel) {
+        answerPanel.hidden = true;
+      }
+      if (answerStatus) {
+        answerStatus.textContent = '';
+        answerStatus.classList.remove('is-correct', 'is-wrong', 'is-pending');
+      }
+      if (answerCorrect) {
+        answerCorrect.innerHTML = '';
+      }
+      if (answerExplanation) {
+        answerExplanation.textContent = '';
+      }
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit answer';
+      }
+      if (nextButton) {
+        nextButton.disabled = true;
+        nextButton.hidden = true;
+      }
+    }
+
+    function setAnswerStatus(label, tone) {
+      if (!answerStatus) {
+        return;
+      }
+      answerStatus.textContent = label;
+      answerStatus.classList.remove('is-correct', 'is-wrong', 'is-pending');
+      if (tone) {
+        answerStatus.classList.add(tone);
+      }
+    }
+
+    function addAnswerList(title, items, ordered) {
+      if (!answerCorrect) {
+        return;
+      }
+      const heading = document.createElement('div');
+      heading.className = 'mcq-answer__label';
+      heading.textContent = title;
+      answerCorrect.appendChild(heading);
+
+      if (!items.length) {
+        const empty = document.createElement('div');
+        empty.className = 'mcq-answer__empty';
+        empty.textContent = 'Answer key not provided yet.';
+        answerCorrect.appendChild(empty);
+        return;
+      }
+
+      const list = document.createElement(ordered ? 'ol' : 'ul');
+      list.className = 'mcq-answer__list';
+      items.forEach((text) => {
+        const li = document.createElement('li');
+        li.textContent = text;
+        list.appendChild(li);
+      });
+      answerCorrect.appendChild(list);
+    }
+
+    function revealAnswer(item, payload) {
+      hasSubmitted = true;
+      optionContainer.classList.add('is-locked');
+      const type = item.type || 'single';
+      const options = Array.isArray(item.options) ? item.options : [];
+      const correctOptions = options.filter((option) => option.is_correct);
+      const correctIds = correctOptions.map((option) => option.id);
+      let isCorrect = null;
+
+      if (answerCorrect) {
+        answerCorrect.innerHTML = '';
+      }
+
+      if (type === 'multiple') {
+        const selected = payload.selected_option_ids || [];
+        isCorrect = correctIds.length > 0
+          && correctIds.length === selected.length
+          && correctIds.every((id) => selected.includes(id));
+        optionContainer.querySelectorAll('button').forEach((button) => {
+          const id = Number(button.dataset.optionId);
+          if (correctIds.includes(id)) {
+            button.classList.add('is-correct');
+          } else if (selected.includes(id)) {
+            button.classList.add('is-wrong');
+          }
+          button.disabled = true;
+        });
+        addAnswerList('Correct answers', correctOptions.map((option) => option.text), false);
+      } else if (type === 'ordering') {
+        const userOrdering = payload.ordering || [];
+        const ordered = options.filter((option) => Number.isFinite(option.correct_order))
+          .sort((a, b) => a.correct_order - b.correct_order);
+        const correctOrdering = ordered.length ? ordered : options;
+        const correctOrderIds = correctOrdering.map((option, index) => option.id ?? index);
+        isCorrect = correctOrderIds.length > 0
+          && correctOrderIds.length === userOrdering.length
+          && correctOrderIds.every((id, index) => userOrdering[index] === id);
+        optionContainer.querySelectorAll('.order-item').forEach((row) => {
+          row.draggable = false;
+        });
+        addAnswerList('Correct order', correctOrdering.map((option) => option.text), true);
+      } else if (type === 'match') {
+        const userMatches = payload.matches || {};
+        const correctMatches = {};
+        options.forEach((option) => {
+          correctMatches[option.id] = option.match_key;
+        });
+        const matchIds = Object.keys(correctMatches);
+        isCorrect = matchIds.length > 0
+          && matchIds.every((id) => String(userMatches[id] || '') === String(correctMatches[id] || ''));
+        optionContainer.querySelectorAll('select').forEach((select) => {
+          select.disabled = true;
+        });
+        const matchLines = options.map((option) => `${option.text} → ${option.match_key || '—'}`);
+        addAnswerList('Correct matches', matchLines, false);
+      } else if (type === 'short_answer') {
+        const answerText = item.answer_text || '';
+        const userAnswer = (payload.short_answer || '').trim().toLowerCase();
+        if (answerText) {
+          isCorrect = userAnswer === answerText.trim().toLowerCase();
+        }
+        const shortInput = optionContainer.querySelector('.short-input');
+        if (shortInput) {
+          shortInput.disabled = true;
+        }
+        addAnswerList('Suggested answer', answerText ? [answerText] : [], false);
+      } else {
+        const selectedId = payload.selected_option_id;
+        isCorrect = correctIds.length > 0 && correctIds.includes(selectedId);
+        optionContainer.querySelectorAll('button').forEach((button) => {
+          const id = Number(button.dataset.optionId);
+          if (correctIds.includes(id)) {
+            button.classList.add('is-correct');
+          } else if (id === selectedId) {
+            button.classList.add('is-wrong');
+          }
+          button.disabled = true;
+        });
+        addAnswerList('Correct answer', correctOptions.map((option) => option.text), false);
+      }
+
+      if (answerExplanation) {
+        const explanation = item.explanation || item.insight || '';
+        answerExplanation.textContent = explanation;
+      }
+
+      if (answerPanel) {
+        answerPanel.hidden = false;
+      }
+
+      if (isCorrect === true) {
+        setAnswerStatus('Correct', 'is-correct');
+      } else if (isCorrect === false) {
+        setAnswerStatus('Incorrect', 'is-wrong');
+      } else {
+        setAnswerStatus('Answer submitted', 'is-pending');
+      }
+
+      if (submitButton) {
+        submitButton.disabled = true;
+      }
+      if (nextButton) {
+        nextButton.disabled = false;
+        nextButton.hidden = false;
+      }
+    }
   </script>
 @endpush

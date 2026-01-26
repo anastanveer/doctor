@@ -1239,10 +1239,72 @@ body{
   color:#fff;
   box-shadow:0 14px 30px rgba(15,23,42,.4);
 }
-.mcq-session__options button:hover:not(.is-active){
+.mcq-session__options button.is-correct{
+  background:#16a34a;
+  border-color:#16a34a;
+  color:#fff;
+  box-shadow:0 14px 30px rgba(22,163,74,.28);
+}
+.mcq-session__options button.is-wrong{
+  background:#dc2626;
+  border-color:#dc2626;
+  color:#fff;
+  box-shadow:0 14px 30px rgba(220,38,38,.24);
+}
+.mcq-session__options.is-locked button{
+  cursor:default;
+}
+.mcq-session__options button:hover:not(.is-active):not(.is-correct):not(.is-wrong){
   transform:translateY(-3px);
   box-shadow:0 12px 24px rgba(15,23,42,.25);
   background:#fff;
+}
+.mcq-answer{
+  border-radius:16px;
+  border:1px solid rgba(15,23,42,.12);
+  padding:16px;
+  background:#f8fafc;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.mcq-answer__status{
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.mcq-answer__status.is-correct{
+  color:#15803d;
+}
+.mcq-answer__status.is-wrong{
+  color:#b91c1c;
+}
+.mcq-answer__status.is-pending{
+  color:#0f172a;
+}
+.mcq-answer__label{
+  font-size:12px;
+  font-weight:800;
+  color:#0f172a;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.mcq-answer__list{
+  margin:6px 0 0 18px;
+  padding:0;
+  color:#0f172a;
+  font-size:14px;
+  line-height:1.5;
+}
+.mcq-answer__empty{
+  font-size:13px;
+  color:rgba(15,23,42,.6);
+}
+.mcq-answer__explanation{
+  font-size:14px;
+  color:#0f172a;
+  line-height:1.6;
 }
 .mcq-progress{
   display:flex;
@@ -1266,40 +1328,6 @@ body{
   background:linear-gradient(90deg, #b5a6ff, #7a63f2);
   border-radius:inherit;
   transition:width .3s ease;
-}
-.mcq-excerpt{
-  margin-top:16px;
-  border-radius:14px;
-  padding:16px;
-  background:#f6f3ff;
-  border:1px solid #e1dbff;
-  box-shadow:inset 0 0 0 1px rgba(91,69,212,.08);
-}
-.mcq-excerpt h4{
-  margin:0 0 6px;
-  font-size:16px;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:var(--teal);
-}
-.mcq-excerpt p{
-  margin:0;
-  font-size:14px;
-  line-height:1.6;
-  color:#0d1623;
-}
-.mcq-metrics{
-  margin-top:10px;
-  display:flex;
-  gap:10px;
-  font-size:12px;
-  color:var(--teal);
-}
-.mcq-metrics span{
-  background:#efeaff;
-  padding:4px 8px;
-  border-radius:999px;
-  border:1px solid #d9d0ff;
 }
 .mcq-session__footer{
   display:flex;

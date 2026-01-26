@@ -735,7 +735,7 @@
           <div class="hero-card">
             <div class="hero-card__title">Two exams, two focused packages</div>
             <p class="hero-card__text">
-              Start with MRCEM Primary, then unlock MRCEM Intermediate when you are ready.
+              Choose MRCEM Primary or MRCEM Intermediate based on your exam timeline.
             </p>
           </div>
         </div>
@@ -763,8 +763,8 @@
           <div>
             <h2 class="guest-h2 guest-h2--left">Choose your MRCEM package</h2>
             <p class="package-lead">
-              MRCEM Primary and MRCEM Intermediate are purchased separately. Complete Primary first,
-              then move to Intermediate when you are ready.
+              MRCEM Primary and MRCEM Intermediate are purchased separately. Pick the plan that fits
+              your exam stage and goals.
             </p>
           </div>
         </div>
@@ -1024,16 +1024,16 @@
     <section class="guest-plan">
       <div class="container guest-plan__grid">
         <div class="guest-plan__copy">
-          <h2 class="guest-h2 guest-h2--left">Two-stage membership pathway</h2>
+          <h2 class="guest-h2 guest-h2--left">Two-plan membership options</h2>
           <p class="guest-plan__lead">
-            Start with MRCEM Primary, then unlock Intermediate when you are ready for higher-level
-            emergency and specialty topics.
+            Pick MRCEM Primary or Intermediate to match your focus on core sciences or
+            higher-level emergency and specialty topics.
           </p>
           <ul class="guest-plan__list">
             <li>MRCEM Primary covers core sciences and past recalls</li>
             <li>MRCEM Intermediate focuses on specialty and emergency presentations</li>
             <li>Separate MCQ banks and progress tracking for each exam</li>
-            <li>Upgrade to Intermediate after completing Primary</li>
+            <li>Switch between plans whenever your exam focus changes</li>
           </ul>
         </div>
 

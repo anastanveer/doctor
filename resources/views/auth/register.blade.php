@@ -104,21 +104,14 @@
               <div class="reg-form-sub" style="margin-top:12px;">
                 {{ $examTypes[$examType] ?? 'Exam package' }}
               </div>
-              @php
-                $lockIntermediate = $examType === 'intermediate' && !$canAccessIntermediate;
-              @endphp
-              @if ($lockIntermediate)
-                <div class="plan-lock">Complete all MRCEM Primary MCQs to unlock Intermediate access.</div>
-              @endif
               @foreach ($plans as $plan)
                 @php
                   $isSelected = old('plan_id')
                     ? (int) old('plan_id') === $plan->id
                     : $plan->id === $defaultPlanId;
-                  $isDisabled = $lockIntermediate;
                 @endphp
-                <label class="plan {{ $isSelected ? 'is-selected' : '' }} {{ $isDisabled ? 'is-disabled' : '' }}" data-plan="{{ $plan->display_label }}" data-price="&pound;{{ $plan->price_gbp }}" data-perday="{{ $plan->per_day }}">
-                  <input type="radio" name="plan_id" value="{{ $plan->id }}" @checked($isSelected) @disabled($isDisabled) />
+                <label class="plan {{ $isSelected ? 'is-selected' : '' }}" data-plan="{{ $plan->display_label }}" data-price="&pound;{{ $plan->price_gbp }}" data-perday="{{ $plan->per_day }}">
+                  <input type="radio" name="plan_id" value="{{ $plan->id }}" @checked($isSelected) />
                   <div class="plan__text">
                     {{ $plan->label }}
                     <span class="plan__price">&pound;{{ $plan->price_gbp }}</span>

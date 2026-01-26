@@ -35,7 +35,7 @@ Route::get('/question-bank', [PageController::class, 'questionBank'])->name('que
 Route::get('/revision-notes', [RevisionNotesController::class, 'index'])->name('revision-notes')->middleware(['auth', 'subscribed']);
 Route::get('/revision-notes/{topic:slug}', [RevisionNotesController::class, 'topic'])->name('revision-notes.topic')->middleware(['auth', 'subscribed']);
 Route::get('/revision-notes/{topic:slug}/{note:slug}', [RevisionNotesController::class, 'show'])->name('revision-notes.show')->middleware(['auth', 'subscribed']);
-Route::get('/flashcards', [PageController::class, 'flashcards'])->name('flashcards')->middleware(['auth', 'subscribed']);
+Route::get('/flashcards', [PageController::class, 'flashcards'])->name('flashcards');
 Route::get('/mock-papers', [MockPapersController::class, 'index'])->name('mock-papers')->middleware(['auth', 'subscribed']);
 Route::get('/mock-papers/{mockPaper:slug}', [MockPapersController::class, 'show'])->name('mock-papers.show')->middleware(['auth', 'subscribed']);
 Route::get('/account', [PageController::class, 'account'])->name('account')->middleware(['auth', 'subscribed']);

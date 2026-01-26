@@ -109,7 +109,6 @@ class PageController extends Controller
             ->where('expires_at', '>=', now())
             ->orderByDesc('expires_at')
             ->first();
-        $canAccessIntermediate = $user?->hasCompletedExam(Topic::EXAM_PRIMARY) ?? false;
         $subscriptions = $user
             ? $user->subscriptions()->with('plan')->orderByDesc('started_at')->get()
             : collect();
@@ -131,7 +130,6 @@ class PageController extends Controller
             'activeSubscription' => $activeSubscription,
             'subscriptions' => $subscriptions,
             'plans' => $plans,
-            'canAccessIntermediate' => $canAccessIntermediate,
         ]);
     }
 
@@ -186,10 +184,13 @@ class PageController extends Controller
                 $meta = is_array($question->meta) ? $question->meta : [];
                 $image = isset($meta['image']) && is_string($meta['image']) ? $meta['image'] : null;
                 $imageAlt = isset($meta['alt']) && is_string($meta['alt']) ? $meta['alt'] : 'Question image';
-                $options = $question->options->map(function ($option) {
+                $options = $question->options->map(function ($option, $idx) {
                     return [
-                        'id' => $option->id,
+                        'id' => $option->id ?? $idx,
                         'text' => $option->text,
+                        'is_correct' => (bool) $option->is_correct,
+                        'correct_order' => $option->correct_order,
+                        'match_key' => $option->match_key,
                     ];
                 })->values()->all();
                 $matchOptions = $question->type === 'match'
@@ -207,6 +208,8 @@ class PageController extends Controller
                     'image' => $image,
                     'image_alt' => $imageAlt,
                     'insight' => $question->explanation ?? 'Review this item to strengthen recall for the exam.',
+                    'explanation' => $question->explanation,
+                    'answer_text' => $question->answer_text,
                     'metrics' => [],
                 ];
             })
@@ -222,15 +225,17 @@ class PageController extends Controller
                     'difficulty' => 'Advanced',
                     'question' => 'Which valve replacement option gives the longest durability for a 54-year-old with aortic stenosis?',
                     'options' => [
-                        ['id' => null, 'text' => 'Mechanical valve + Warfarin'],
-                        ['id' => null, 'text' => 'Bioprosthetic valve'],
-                        ['id' => null, 'text' => 'Ross procedure'],
-                        ['id' => null, 'text' => 'Transcatheter AVR'],
+                        ['id' => 1, 'text' => 'Mechanical valve + Warfarin', 'is_correct' => true],
+                        ['id' => 2, 'text' => 'Bioprosthetic valve', 'is_correct' => false],
+                        ['id' => 3, 'text' => 'Ross procedure', 'is_correct' => false],
+                        ['id' => 4, 'text' => 'Transcatheter AVR', 'is_correct' => false],
                     ],
                     'match_options' => [],
                     'image' => null,
                     'image_alt' => 'Question image',
                     'insight' => 'Focus on durability and guideline-driven recommendations for this scenario.',
+                    'explanation' => 'Mechanical valves are most durable but require lifelong anticoagulation.',
+                    'answer_text' => null,
                     'metrics' => [],
                 ],
             ];
@@ -297,9 +302,7 @@ class PageController extends Controller
             \App\Models\Plan::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
         ];
 
-        $canAccessIntermediate = false;
-
-        return view('auth.register', compact('plansByExam', 'defaultPlanId', 'examTypes', 'canAccessIntermediate'));
+        return view('auth.register', compact('plansByExam', 'defaultPlanId', 'examTypes'));
     }
 
     private function buildStreaks(Collection $attempts): array

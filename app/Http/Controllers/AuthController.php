@@ -40,9 +40,8 @@ class AuthController extends Controller
             Plan::EXAM_PRIMARY => 'MRCEM Primary',
             Plan::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
         ];
-        $canAccessIntermediate = false;
 
-        return view('auth.register', compact('plansByExam', 'defaultPlanId', 'examTypes', 'canAccessIntermediate'));
+        return view('auth.register', compact('plansByExam', 'defaultPlanId', 'examTypes'));
     }
 
     public function login(Request $request): RedirectResponse
@@ -74,13 +73,6 @@ class AuthController extends Controller
             'plan_id' => ['required', 'exists:plans,id'],
             'terms' => ['accepted'],
         ]);
-
-        $plan = Plan::find($data['plan_id']);
-        if ($plan && $plan->exam_type === Plan::EXAM_INTERMEDIATE) {
-            return back()->withErrors([
-                'plan_id' => 'MRCEM Intermediate unlocks after completing all MRCEM Primary MCQs.',
-            ])->withInput();
-        }
 
         $user = User::create([
             'name' => $data['name'],

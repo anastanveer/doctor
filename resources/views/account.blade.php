@@ -120,12 +120,6 @@
               <p class="sub-empty">No active subscription. Choose a plan to unlock your dashboard.</p>
             @endif
 
-            @if (!$canAccessIntermediate)
-              <div class="sub-foot" style="margin-top:10px;">
-                Complete all MRCEM Primary MCQs to unlock Intermediate plans.
-              </div>
-            @endif
-
             <form class="sub-plan-form" method="post" action="{{ route('subscribe.checkout') }}">
               @csrf
               <input type="hidden" name="terms" value="1" />
@@ -134,11 +128,8 @@
                   <label class="sub-plan-label" for="plan-change">Change plan</label>
                   <select id="plan-change" name="plan_id" class="sub-plan-select">
                     @foreach ($plans as $plan)
-                      @php
-                        $locked = $plan->exam_type === 'intermediate' && !$canAccessIntermediate;
-                      @endphp
-                      <option value="{{ $plan->id }}" @selected($activeSubscription?->plan_id === $plan->id) @disabled($locked)>
-                        {{ $plan->display_label }} - &pound;{{ $plan->price_gbp }}{{ $locked ? ' (locked)' : '' }}
+                      <option value="{{ $plan->id }}" @selected($activeSubscription?->plan_id === $plan->id)>
+                        {{ $plan->display_label }} - &pound;{{ $plan->price_gbp }}
                       </option>
                     @endforeach
                   </select>

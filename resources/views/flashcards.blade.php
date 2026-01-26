@@ -61,7 +61,7 @@
       </section>
 
       <aside class="fc-aside">
-        <form class="sub-card" action="#" method="post">
+        <div class="sub-card">
           <div class="sub-head">
             <div>
               <div class="sub-kicker">Choose membership</div>
@@ -117,18 +117,15 @@
             </label>
           </div>
 
-          <label class="sub-terms">
-            <input type="checkbox" />
-            <span>I agree to the <a href="{{ route('terms') }}">terms and conditions</a> and <a href="{{ route('privacy') }}">privacy policy</a></span>
-          </label>
-
-          <button class="sub-btn" type="button">Register now</button>
+          <a class="sub-btn" href="{{ auth()->check() ? route('dashboard') : route('register') }}">
+            {{ auth()->check() ? 'Go to dashboard' : 'Register now' }}
+          </a>
 
           <div class="sub-foot">
             <span class="sub-foot-dot"></span>
             Encrypted checkout • Cancel anytime
           </div>
-        </form>
+        </div>
       </aside>
     </div>
   </main>

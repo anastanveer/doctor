@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Plan;
-use App\Models\Topic;
 use App\Services\StripeCheckoutService;
 use App\Services\SubscriptionService;
 use Illuminate\Http\RedirectResponse;
@@ -17,22 +16,11 @@ class BillingController extends Controller
     public function showSubscribe(): View|RedirectResponse
     {
         $user = auth()->user();
-        $activeSubscription = $user?->activeSubscription();
-        $canAccessIntermediate = $user?->hasCompletedExam(Topic::EXAM_PRIMARY) ?? false;
-        $allowUpgrade = $activeSubscription
-            && $activeSubscription->plan?->exam_type === Plan::EXAM_PRIMARY
-            && $canAccessIntermediate;
-        if ($user && $user->hasActiveSubscription() && !$allowUpgrade) {
-            return redirect()->route('dashboard');
-        }
 
         $plansQuery = Plan::where('is_active', true)
             ->where('name', 'like', 'MRCEM %')
             ->whereIn('duration_months', [1, 3, 6])
             ->orderBy('duration_months');
-        if ($allowUpgrade) {
-            $plansQuery->where('exam_type', Plan::EXAM_INTERMEDIATE);
-        }
         $plans = $plansQuery->get();
 
         $plans = $this->decoratePlans($plans);
@@ -43,7 +31,7 @@ class BillingController extends Controller
             Plan::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
         ];
 
-        return view('subscribe', compact('plansByExam', 'defaultPlanId', 'examTypes', 'canAccessIntermediate', 'allowUpgrade'));
+        return view('subscribe', compact('plansByExam', 'defaultPlanId', 'examTypes'));
     }
 
     public function startCheckout(Request $request, StripeCheckoutService $stripe): RedirectResponse
@@ -54,14 +42,6 @@ class BillingController extends Controller
         ]);
 
         $plan = Plan::find((int) $data['plan_id']);
-        if ($plan && $plan->exam_type === Plan::EXAM_INTERMEDIATE) {
-            $canAccess = $request->user()?->hasCompletedExam(Topic::EXAM_PRIMARY) ?? false;
-            if (!$canAccess) {
-                return back()->withErrors([
-                    'plan_id' => 'Complete all MRCEM Primary MCQs to unlock MRCEM Intermediate access.',
-                ]);
-            }
-        }
 
         try {
             $sessionUrl = $stripe->createCheckoutSession($request->user(), (int) $data['plan_id']);
