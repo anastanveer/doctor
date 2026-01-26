@@ -4,21 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\MockPaper;
 use App\Models\MockPaperQuestion;
+use App\Models\Topic;
+use App\Models\User;
 use Illuminate\View\View;
 
 class MockPapersController extends Controller
 {
     public function index(): View
     {
+        $examType = $this->resolveExamType(auth()->user());
         $papers = MockPaper::where('is_active', true)
+            ->where('exam_type', $examType)
             ->orderBy('order')
             ->get();
 
-        $totalMockQuestions = MockPaperQuestion::whereHas('paper', function ($query) {
-            $query->where('is_active', true);
+        $totalMockQuestions = MockPaperQuestion::whereHas('paper', function ($query) use ($examType) {
+            $query->where('is_active', true)
+                ->where('exam_type', $examType);
         })->count();
-        $totalMockTopics = MockPaperQuestion::whereHas('paper', function ($query) {
-            $query->where('is_active', true);
+        $totalMockTopics = MockPaperQuestion::whereHas('paper', function ($query) use ($examType) {
+            $query->where('is_active', true)
+                ->where('exam_type', $examType);
         })->distinct('topic')->count('topic');
 
         return view('mock-papers', [
@@ -30,7 +36,8 @@ class MockPapersController extends Controller
 
     public function show(MockPaper $mockPaper): View
     {
-        if (!$mockPaper->is_active) {
+        $examType = $this->resolveExamType(auth()->user());
+        if (!$mockPaper->is_active || $mockPaper->exam_type !== $examType) {
             abort(404);
         }
 
@@ -51,5 +58,15 @@ class MockPapersController extends Controller
             'paper' => $mockPaper,
             'paperTopics' => $paperTopics,
         ]);
+    }
+
+    private function resolveExamType(?User $user): string
+    {
+        $examType = $user?->activeSubscription()?->plan?->exam_type;
+        if (in_array($examType, Topic::EXAM_TYPES, true)) {
+            return $examType;
+        }
+
+        return Topic::EXAM_PRIMARY;
     }
 }

@@ -15,13 +15,17 @@ class PageController extends Controller
     public function dashboard(): View
     {
         $user = auth()->user();
+        $examType = $this->resolveExamType($user);
+        $examLabel = $this->examLabel($examType);
         $totalQuestions = Question::where('is_active', true)
+            ->where('exam_type', $examType)
             ->where(function ($query) {
                 $query->whereHas('options')
                     ->orWhere('type', 'short_answer');
             })
             ->count();
         $completedQuestions = QuestionAttempt::where('user_id', $user->id)
+            ->whereHas('question', fn ($query) => $query->where('exam_type', $examType))
             ->distinct('question_id')
             ->count('question_id');
         $completionPercent = $totalQuestions > 0
@@ -29,9 +33,10 @@ class PageController extends Controller
             : 0;
         $remainingQuestions = max(0, $totalQuestions - $completedQuestions);
 
-        $topicCards = $this->buildTopicCards($user->id);
+        $topicCards = $this->buildTopicCards($user->id, $examType);
 
         return view('dashboard', [
+            'examLabel' => $examLabel,
             'totalQuestions' => $totalQuestions,
             'completedQuestions' => $completedQuestions,
             'completionPercent' => $completionPercent,
@@ -42,8 +47,13 @@ class PageController extends Controller
 
     public function questionBank(): View
     {
-        $topics = Topic::orderBy('name')->pluck('name');
+        $examType = $this->resolveExamType(auth()->user());
+        $examLabel = $this->examLabel($examType);
+        $topics = Topic::where('exam_type', $examType)
+            ->orderBy('name')
+            ->pluck('name');
         $totalQuestions = Question::where('is_active', true)
+            ->where('exam_type', $examType)
             ->where(function ($query) {
                 $query->whereHas('options')
                     ->orWhere('type', 'short_answer');
@@ -55,10 +65,13 @@ class PageController extends Controller
                     $subquery->whereHas('options')
                         ->orWhere('type', 'short_answer');
                 });
-        })->count();
+        })
+            ->where('exam_type', $examType)
+            ->count();
 
         return view('question-bank', [
             'topics' => $topics,
+            'examLabel' => $examLabel,
             'totalQuestions' => $totalQuestions,
             'totalTopics' => $totalTopics,
         ]);
@@ -96,16 +109,20 @@ class PageController extends Controller
             ->where('expires_at', '>=', now())
             ->orderByDesc('expires_at')
             ->first();
+        $canAccessIntermediate = $user?->hasCompletedExam(Topic::EXAM_PRIMARY) ?? false;
         $subscriptions = $user
             ? $user->subscriptions()->with('plan')->orderByDesc('started_at')->get()
             : collect();
         $plans = \App\Models\Plan::where('is_active', true)
+            ->where('name', 'like', 'MRCEM %')
             ->whereIn('duration_months', [1, 3, 6])
             ->orderBy('duration_months')
             ->get()
             ->map(function (\App\Models\Plan $plan) {
                 $plan->price_gbp = number_format($plan->price_cents / 100, 2);
+                $plan->exam_label = $plan->examLabel();
                 $plan->label = $plan->duration_months.'-month access';
+                $plan->display_label = $plan->exam_label.' • '.$plan->label;
 
                 return $plan;
             });
@@ -114,6 +131,7 @@ class PageController extends Controller
             'activeSubscription' => $activeSubscription,
             'subscriptions' => $subscriptions,
             'plans' => $plans,
+            'canAccessIntermediate' => $canAccessIntermediate,
         ]);
     }
 
@@ -134,6 +152,8 @@ class PageController extends Controller
 
     public function mcqSession(): View
     {
+        $examType = $this->resolveExamType(auth()->user());
+        $examLabel = $this->examLabel($examType);
         $topicNames = request()->input('topics', []);
         if (!is_array($topicNames)) {
             $topicNames = [$topicNames];
@@ -147,6 +167,7 @@ class PageController extends Controller
 
         $query = Question::with('topic', 'options')
             ->where('is_active', true)
+            ->where('exam_type', $examType)
             ->where(function ($subquery) {
                 $subquery->whereHas('options')
                     ->orWhere('type', 'short_answer');
@@ -222,6 +243,7 @@ class PageController extends Controller
             'mcqQuestions' => $mcqQuestions,
             'sessionTotal' => $sessionTotal,
             'sessionTopics' => $sessionTopics,
+            'examLabel' => $examLabel,
         ]);
     }
 
@@ -248,6 +270,7 @@ class PageController extends Controller
     public function register(): View
     {
         $plans = \App\Models\Plan::where('is_active', true)
+            ->where('name', 'like', 'MRCEM %')
             ->whereIn('duration_months', [1, 3, 6])
             ->orderBy('duration_months')
             ->get()
@@ -259,13 +282,24 @@ class PageController extends Controller
                     : $perDayPence.'p per day';
 
                 $plan->price_gbp = number_format($plan->price_cents / 100, 2);
+                $plan->exam_label = $plan->examLabel();
                 $plan->label = $plan->duration_months.'-month access';
+                $plan->display_label = $plan->exam_label.' • '.$plan->label;
                 $plan->per_day = $perDay;
 
                 return $plan;
             });
 
-        return view('auth.register', compact('plans'));
+        $plansByExam = $plans->groupBy('exam_type');
+        $defaultPlanId = $plans->firstWhere('exam_type', \App\Models\Plan::EXAM_PRIMARY)?->id ?? $plans->first()?->id;
+        $examTypes = [
+            \App\Models\Plan::EXAM_PRIMARY => 'MRCEM Primary',
+            \App\Models\Plan::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
+        ];
+
+        $canAccessIntermediate = false;
+
+        return view('auth.register', compact('plansByExam', 'defaultPlanId', 'examTypes', 'canAccessIntermediate'));
     }
 
     private function buildStreaks(Collection $attempts): array
@@ -393,7 +427,7 @@ class PageController extends Controller
         return 'var(--h-green)';
     }
 
-    private function buildTopicCards(int $userId): array
+    private function buildTopicCards(int $userId, string $examType): array
     {
         $topics = Topic::withCount(['questions as questions_count' => function ($query) {
             $query->where('is_active', true)
@@ -401,7 +435,10 @@ class PageController extends Controller
                     $subquery->whereHas('options')
                         ->orWhere('type', 'short_answer');
                 });
-        }])->get()->filter(function ($topic) {
+        }])
+            ->where('exam_type', $examType)
+            ->get()
+            ->filter(function ($topic) {
             return $topic->questions_count > 0;
         });
 
@@ -413,6 +450,7 @@ class PageController extends Controller
             ->join('questions', 'question_attempts.question_id', '=', 'questions.id')
             ->selectRaw('questions.topic_id as topic_id, count(distinct question_attempts.question_id) as attempted_questions')
             ->where('question_attempts.user_id', $userId)
+            ->where('questions.exam_type', $examType)
             ->groupBy('questions.topic_id')
             ->get()
             ->mapWithKeys(function ($row) {
@@ -444,6 +482,23 @@ class PageController extends Controller
             ->take(6)
             ->values()
             ->all();
+    }
+
+    private function resolveExamType(?User $user): string
+    {
+        $examType = $user?->activeSubscription()?->plan?->exam_type;
+        if (in_array($examType, Topic::EXAM_TYPES, true)) {
+            return $examType;
+        }
+
+        return Topic::EXAM_PRIMARY;
+    }
+
+    private function examLabel(string $examType): string
+    {
+        return $examType === Topic::EXAM_INTERMEDIATE
+            ? 'MRCEM Intermediate'
+            : 'MRCEM Primary';
     }
 
     private function buildInsights(Collection $attempts, int $meanScore): array

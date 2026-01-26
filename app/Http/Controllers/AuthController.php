@@ -33,21 +33,16 @@ class AuthController extends Controller
                 : redirect()->route('subscribe');
         }
 
-        $plans = $this->activePlans()->map(function (Plan $plan) {
-            $days = max(1, $plan->duration_months * 30);
-            $perDayPence = (int) round($plan->price_cents / $days);
-            $perDay = $perDayPence >= 100
-                ? 'GBP '.number_format($perDayPence / 100, 2).' per day'
-                : $perDayPence.'p per day';
+        $plans = $this->decoratePlans($this->activePlans());
+        $plansByExam = $plans->groupBy('exam_type');
+        $defaultPlanId = $this->defaultPlanId($plans);
+        $examTypes = [
+            Plan::EXAM_PRIMARY => 'MRCEM Primary',
+            Plan::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
+        ];
+        $canAccessIntermediate = false;
 
-            $plan->price_gbp = number_format($plan->price_cents / 100, 2);
-            $plan->label = $plan->duration_months.'-month access';
-            $plan->per_day = $perDay;
-
-            return $plan;
-        });
-
-        return view('auth.register', compact('plans'));
+        return view('auth.register', compact('plansByExam', 'defaultPlanId', 'examTypes', 'canAccessIntermediate'));
     }
 
     public function login(Request $request): RedirectResponse
@@ -79,6 +74,13 @@ class AuthController extends Controller
             'plan_id' => ['required', 'exists:plans,id'],
             'terms' => ['accepted'],
         ]);
+
+        $plan = Plan::find($data['plan_id']);
+        if ($plan && $plan->exam_type === Plan::EXAM_INTERMEDIATE) {
+            return back()->withErrors([
+                'plan_id' => 'MRCEM Intermediate unlocks after completing all MRCEM Primary MCQs.',
+            ])->withInput();
+        }
 
         $user = User::create([
             'name' => $data['name'],
@@ -114,8 +116,37 @@ class AuthController extends Controller
     private function activePlans()
     {
         return Plan::where('is_active', true)
+            ->where('name', 'like', 'MRCEM %')
             ->whereIn('duration_months', [1, 3, 6])
             ->orderBy('duration_months')
             ->get();
+    }
+
+    private function decoratePlans($plans)
+    {
+        return $plans->map(function (Plan $plan) {
+            $days = max(1, $plan->duration_months * 30);
+            $perDayPence = (int) round($plan->price_cents / $days);
+            $perDay = $perDayPence >= 100
+                ? 'GBP '.number_format($perDayPence / 100, 2).' per day'
+                : $perDayPence.'p per day';
+
+            $plan->price_gbp = number_format($plan->price_cents / 100, 2);
+            $plan->exam_label = $plan->examLabel();
+            $plan->label = $plan->duration_months.'-month access';
+            $plan->display_label = $plan->exam_label.' • '.$plan->label;
+            $plan->per_day = $perDay;
+
+            return $plan;
+        });
+    }
+
+    private function defaultPlanId($plans): ?int
+    {
+        $preferred = $plans->first(function (Plan $plan) {
+            return $plan->exam_type === Plan::EXAM_PRIMARY && $plan->duration_months === 3;
+        });
+
+        return $preferred?->id ?? $plans->first()?->id;
     }
 }

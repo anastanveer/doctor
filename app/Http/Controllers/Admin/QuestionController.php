@@ -8,6 +8,7 @@ use App\Models\QuestionOption;
 use App\Models\Topic;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class QuestionController extends Controller
@@ -23,13 +24,24 @@ class QuestionController extends Controller
 
     public function index(): View
     {
-        $questions = Question::with('topic')->latest()->paginate(15);
+        $examType = request('exam_type');
+        $questions = Question::with('topic')
+            ->when($examType, fn ($query) => $query->where('exam_type', $examType))
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
 
-        return view('admin.questions.index', compact('questions'));
+        $examTypes = [
+            Topic::EXAM_PRIMARY => 'MRCEM Primary',
+            Topic::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
+        ];
+
+        return view('admin.questions.index', compact('questions', 'examTypes', 'examType'));
     }
 
     public function create(): View
     {
+        $examType = request('exam_type', Topic::EXAM_PRIMARY);
         $topics = Topic::orderBy('name')->get();
         $types = $this->types;
 
@@ -38,6 +50,11 @@ class QuestionController extends Controller
             'topics' => $topics,
             'types' => $types,
             'options' => collect(),
+            'examTypes' => [
+                Topic::EXAM_PRIMARY => 'MRCEM Primary',
+                Topic::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
+            ],
+            'examType' => $examType,
         ]);
     }
 
@@ -54,11 +71,22 @@ class QuestionController extends Controller
 
     public function edit(Question $question): View
     {
+        $examType = $question->exam_type ?? $question->topic?->exam_type ?? Topic::EXAM_PRIMARY;
         $topics = Topic::orderBy('name')->get();
         $types = $this->types;
         $options = $question->options()->get();
 
-        return view('admin.questions.form', compact('question', 'topics', 'types', 'options'));
+        return view('admin.questions.form', [
+            'question' => $question,
+            'topics' => $topics,
+            'types' => $types,
+            'options' => $options,
+            'examTypes' => [
+                Topic::EXAM_PRIMARY => 'MRCEM Primary',
+                Topic::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
+            ],
+            'examType' => $examType,
+        ]);
     }
 
     public function update(Request $request, Question $question): RedirectResponse
@@ -83,8 +111,9 @@ class QuestionController extends Controller
 
     private function validateQuestion(Request $request): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'topic_id' => ['nullable', 'exists:topics,id'],
+            'exam_type' => ['required', Rule::in(Topic::EXAM_TYPES)],
             'type' => ['required', 'string'],
             'difficulty' => ['nullable', 'string', 'max:50'],
             'stem' => ['required', 'string'],
@@ -94,6 +123,17 @@ class QuestionController extends Controller
             'shuffle_options' => ['nullable', 'boolean'],
             'time_limit' => ['nullable', 'integer', 'min:0'],
         ]);
+
+        if (!empty($data['topic_id'])) {
+            $topicExam = Topic::query()
+                ->whereKey($data['topic_id'])
+                ->value('exam_type');
+            if ($topicExam) {
+                $data['exam_type'] = $topicExam;
+            }
+        }
+
+        return $data;
     }
 
     private function syncOptions(Question $question, array $options): void

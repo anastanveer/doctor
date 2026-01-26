@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'REVISE MSRA - Error logs')
+@section('title', 'REVISE MRCEM - Error logs')
 @section('page_title', 'Error logs')
 @section('page_sub', 'Latest application errors and warnings.')
 

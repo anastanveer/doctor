@@ -10,6 +10,7 @@ class MockPaper extends Model
     protected $fillable = [
         'title',
         'slug',
+        'exam_type',
         'description',
         'duration_minutes',
         'order',

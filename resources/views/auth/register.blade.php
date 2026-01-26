@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'REVISE MSRA - Create account')
+@section('title', 'REVISE MRCEM - Create account')
 
 @section('content')
   <main class="page reg-page">
     <div class="container reg-wrap">
       <span class="reg-hero-accent">Membership</span>
-      <h1 class="reg-hero-title">Create your MSRA account in minutes</h1>
+      <h1 class="reg-hero-title">Create your MRCEM account in minutes</h1>
       <p class="reg-hero-sub">
         Join thousands of candidates using focused, high-yield content to secure top scores.
       </p>
@@ -18,17 +18,17 @@
 
       <div class="reg-grid">
         <section class="reg-card reg-card--quote">
-          <div class="reg-card__title">Why candidates choose Revise MSRA</div>
+          <div class="reg-card__title">Why candidates choose Revise MRCEM</div>
 
           <div class="quote">
             <p>"I started with the question bank and quickly found my weak topics. The notes and mocks did the rest."</p>
-            <div class="quote__meta">Dr. Sara A. • GP Training</div>
+            <div class="quote__meta">Dr. Sara A. • Emergency Medicine Training</div>
           </div>
 
           <div class="reg-section">
             <h2 class="reg-h2">What you get</h2>
             <ul class="reg-ticks">
-              <li>Complete MSRA curriculum coverage with clear explanations.</li>
+              <li>Complete MRCEM curriculum coverage with clear explanations.</li>
               <li>Exam-style mock papers to build stamina and timing.</li>
               <li>Revision notes and flashcards for fast recall.</li>
               <li>Completion tracking to focus your revision.</li>
@@ -38,7 +38,7 @@
           <div class="reg-section">
             <h2 class="reg-h2">Bonus access</h2>
             <ul class="reg-bonuses">
-              <li><span class="bonus-ico">✓</span> Professional Dilemmas high-yield drills</li>
+              <li><span class="bonus-ico">✓</span> Primary and Intermediate pathway guidance</li>
               <li><span class="bonus-ico">✓</span> Completion tracking (done / total)</li>
               <li><span class="bonus-ico">✓</span> Instant access after checkout</li>
             </ul>
@@ -54,7 +54,7 @@
               </article>
               <article class="reg-proof-card">
                 <div class="reg-proof-num">3,000+</div>
-                <div class="reg-proof-title">MSRA-style questions</div>
+                <div class="reg-proof-title">MRCEM-style questions</div>
                 <div class="reg-proof-sub">Exam-accurate format with detailed explanations.</div>
               </article>
               <article class="reg-proof-card">
@@ -100,29 +100,45 @@
             <div class="reg-divider"></div>
             <div class="reg-form-sub">Choose your plan</div>
 
-            @foreach ($plans as $index => $plan)
+            @foreach ($plansByExam as $examType => $plans)
+              <div class="reg-form-sub" style="margin-top:12px;">
+                {{ $examTypes[$examType] ?? 'Exam package' }}
+              </div>
               @php
-                $isSelected = old('plan_id')
-                  ? (int) old('plan_id') === $plan->id
-                  : $plan->duration_months === 3;
+                $lockIntermediate = $examType === 'intermediate' && !$canAccessIntermediate;
               @endphp
-              <label class="plan {{ $isSelected ? 'is-selected' : '' }}" data-plan="{{ $plan->label }}" data-price="&pound;{{ $plan->price_gbp }}" data-perday="{{ $plan->per_day }}">
-                <input type="radio" name="plan_id" value="{{ $plan->id }}" @checked($isSelected) />
-                <div class="plan__text">
-                  {{ $plan->label }}
-                  <span class="plan__price">&pound;{{ $plan->price_gbp }}</span>
-                  <span class="plan__hint">Access for {{ $plan->duration_months }} month{{ $plan->duration_months > 1 ? 's' : '' }}</span>
-                </div>
-              </label>
+              @if ($lockIntermediate)
+                <div class="plan-lock">Complete all MRCEM Primary MCQs to unlock Intermediate access.</div>
+              @endif
+              @foreach ($plans as $plan)
+                @php
+                  $isSelected = old('plan_id')
+                    ? (int) old('plan_id') === $plan->id
+                    : $plan->id === $defaultPlanId;
+                  $isDisabled = $lockIntermediate;
+                @endphp
+                <label class="plan {{ $isSelected ? 'is-selected' : '' }} {{ $isDisabled ? 'is-disabled' : '' }}" data-plan="{{ $plan->display_label }}" data-price="&pound;{{ $plan->price_gbp }}" data-perday="{{ $plan->per_day }}">
+                  <input type="radio" name="plan_id" value="{{ $plan->id }}" @checked($isSelected) @disabled($isDisabled) />
+                  <div class="plan__text">
+                    {{ $plan->label }}
+                    <span class="plan__price">&pound;{{ $plan->price_gbp }}</span>
+                    <span class="plan__hint">Access for {{ $plan->duration_months }} month{{ $plan->duration_months > 1 ? 's' : '' }}</span>
+                  </div>
+                </label>
+              @endforeach
             @endforeach
 
+            @php
+              $flatPlans = $plansByExam->flatten();
+              $defaultPlan = $flatPlans->firstWhere('id', $defaultPlanId) ?? $flatPlans->first();
+            @endphp
             <div class="reg-price" aria-live="polite">
               <div class="reg-price__label">Plan summary</div>
               <div class="reg-price__row">
-                <span class="reg-price__name">3-month access</span>
-                <span class="reg-price__value">&pound;29.97</span>
+                <span class="reg-price__name">{{ $defaultPlan?->display_label ?? 'Selected plan' }}</span>
+                <span class="reg-price__value">&pound;{{ $defaultPlan?->price_gbp ?? '0.00' }}</span>
               </div>
-              <div class="reg-price__meta">33p per day • Cancel anytime</div>
+              <div class="reg-price__meta">{{ $defaultPlan?->per_day ?? '' }} • Cancel anytime</div>
             </div>
 
             <div class="reg-check">

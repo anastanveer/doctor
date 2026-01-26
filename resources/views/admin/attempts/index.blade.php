@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'REVISE MSRA • MCQ results')
+@section('title', 'REVISE MRCEM • MCQ results')
 @section('page_title', 'MCQ results')
 @section('page_sub', 'Track real user performance and session momentum.')
 

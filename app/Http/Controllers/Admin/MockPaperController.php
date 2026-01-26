@@ -4,26 +4,43 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MockPaper;
+use App\Models\Topic;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class MockPaperController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $examTypes = $this->examTypes();
+        $examType = $request->input('exam_type');
+        if (!array_key_exists($examType, $examTypes)) {
+            $examType = null;
+        }
+
         $papers = MockPaper::withCount('questions')
+            ->when($examType, fn ($query) => $query->where('exam_type', $examType))
             ->orderBy('order')
             ->paginate(15);
 
-        return view('admin.mock-papers.index', compact('papers'));
+        return view('admin.mock-papers.index', compact('papers', 'examTypes', 'examType'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
+        $examTypes = $this->examTypes();
+        $examType = $request->input('exam_type');
+        if (!array_key_exists($examType, $examTypes)) {
+            $examType = Topic::EXAM_PRIMARY;
+        }
+
         return view('admin.mock-papers.form', [
             'paper' => new MockPaper(),
+            'examTypes' => $examTypes,
+            'examType' => $examType,
         ]);
     }
 
@@ -42,6 +59,8 @@ class MockPaperController extends Controller
     {
         return view('admin.mock-papers.form', [
             'paper' => $mockPaper,
+            'examTypes' => $this->examTypes(),
+            'examType' => $mockPaper->exam_type ?? Topic::EXAM_PRIMARY,
         ]);
     }
 
@@ -69,6 +88,7 @@ class MockPaperController extends Controller
         $data = $request->validate([
             'title' => ['required', 'string', 'max:150'],
             'slug' => ['nullable', 'string', 'max:170'],
+            'exam_type' => ['required', Rule::in(Topic::EXAM_TYPES)],
             'description' => ['nullable', 'string'],
             'duration_minutes' => ['required', 'integer', 'min:1'],
             'order' => ['required', 'integer', 'min:1'],
@@ -97,5 +117,13 @@ class MockPaperController extends Controller
         }
 
         return $slug;
+    }
+
+    private function examTypes(): array
+    {
+        return [
+            Topic::EXAM_PRIMARY => 'MRCEM Primary',
+            Topic::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
+        ];
     }
 }

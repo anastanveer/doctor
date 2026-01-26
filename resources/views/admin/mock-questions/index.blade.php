@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'REVISE MSRA - Mock MCQs')
+@section('title', 'REVISE MRCEM - Mock MCQs')
 @section('page_title', 'Mock MCQs')
 @section('page_sub', 'Add MCQs for each mock paper.')
 
@@ -8,7 +8,13 @@
   <div class="admin-panel">
     <div class="account-head" style="margin-bottom:18px;">
       <div class="account-actions" style="display:flex; gap:10px; align-items:center;">
-        <form method="get" action="{{ route('admin.mock-questions.index') }}">
+        <form method="get" action="{{ route('admin.mock-questions.index') }}" style="display:flex; gap:10px; align-items:center;">
+          <select name="exam_type" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;" onchange="this.form.submit()">
+            <option value="">All exams</option>
+            @foreach ($examTypes as $value => $label)
+              <option value="{{ $value }}" @selected($examType === $value)>{{ $label }}</option>
+            @endforeach
+          </select>
           <select name="paper" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;" onchange="this.form.submit()">
             <option value="">All papers</option>
             @foreach ($papers as $paper)
@@ -16,7 +22,7 @@
             @endforeach
           </select>
         </form>
-        <a class="btn-primary-dark" href="{{ route('admin.mock-questions.create', $paperId ? ['paper' => $paperId] : []) }}">
+        <a class="btn-primary-dark" href="{{ route('admin.mock-questions.create', array_filter(['exam_type' => $examType, 'paper' => $paperId])) }}">
           <span class="btn-ico" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -38,6 +44,7 @@
         <thead>
           <tr>
             <th style="text-align:left; padding:10px;">Paper</th>
+            <th style="text-align:left; padding:10px;">Exam</th>
             <th style="text-align:left; padding:10px;">Order</th>
             <th style="text-align:left; padding:10px;">Topic</th>
             <th style="text-align:left; padding:10px;">Stem</th>
@@ -49,6 +56,13 @@
           @forelse ($questions as $question)
             <tr>
               <td style="padding:10px;">{{ $question->paper?->title ?? 'N/A' }}</td>
+              <td style="padding:10px;">
+                @if ($question->paper)
+                  {{ $question->paper->exam_type === 'intermediate' ? 'MRCEM Intermediate' : 'MRCEM Primary' }}
+                @else
+                  N/A
+                @endif
+              </td>
               <td style="padding:10px;">{{ $question->order }}</td>
               <td style="padding:10px;">{{ $question->topic ?? 'General' }}</td>
               <td style="padding:10px;">{{ \Illuminate\Support\Str::limit($question->stem, 80) }}</td>
@@ -64,7 +78,7 @@
             </tr>
           @empty
             <tr>
-              <td colspan="6" style="padding:12px;">No mock MCQs yet.</td>
+              <td colspan="7" style="padding:12px;">No mock MCQs yet.</td>
             </tr>
           @endforelse
         </tbody>

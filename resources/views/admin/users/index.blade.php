@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'REVISE MSRA • Users')
+@section('title', 'REVISE MRCEM • Users')
 @section('page_title', 'Users')
 @section('page_sub', 'Track account status, subscriptions, and retention.')
 

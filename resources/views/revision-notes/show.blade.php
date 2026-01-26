@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'REVISE MSRA - Revision notes')
+@section('title', 'REVISE MRCEM - Revision notes')
 
 @section('content')
   <section class="page-hero page-hero--green">

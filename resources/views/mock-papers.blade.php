@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'REVISE MSRA - Mock papers')
+@section('title', 'REVISE MRCEM - Mock papers')
 
 @section('content')
   <section class="page-hero page-hero--orange">
@@ -20,7 +20,7 @@
         <h2 class="mock-title">Candidate instructions</h2>
 
         <p class="mock-intro">
-          Thank you for taking the time to complete the MSRA Clinical Problem Solving mock papers.
+          Thank you for taking the time to complete the MRCEM Clinical Problem Solving mock papers.
           They have been designed to replicate the official Clinical Problem Solving exam questions
           as closely as possible in both content & format.
         </p>
@@ -38,8 +38,8 @@
         </ul>
 
         <p class="mock-note">
-          The Revise MSRA mock papers focus on <strong>clinchers, recalls</strong> and
-          question subject areas known to come up <strong>frequently in the MSRA exam</strong>,
+          The Revise MRCEM mock papers focus on <strong>clinchers, recalls</strong> and
+          question subject areas known to come up <strong>frequently in the MRCEM exam</strong>,
           so be sure to review the answers and key learning summaries after completing each paper.
         </p>
 
@@ -65,10 +65,10 @@
             <span></span><span></span><span></span><span></span><span></span>
           </div>
 
-          <h3 class="mastery-title">MSRA Mastery</h3>
+          <h3 class="mastery-title">MRCEM Mastery</h3>
 
           <p class="mastery-text">
-            With competition tougher than ever, the MSRA Mastery Course equips you with
+            With competition tougher than ever, the MRCEM Mastery Course equips you with
             high-yield learning, clinchers, recalls, and expert strategies to excel.
           </p>
 

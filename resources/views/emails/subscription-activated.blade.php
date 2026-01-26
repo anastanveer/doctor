@@ -12,7 +12,7 @@
           <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; width:100%; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 12px 30px rgba(15,23,42,.12);">
             <tr>
               <td style="background:#63d7cf; padding:20px 24px;">
-                <h1 style="margin:0; font-size:22px; color:#111111;">Revise MSRA</h1>
+                <h1 style="margin:0; font-size:22px; color:#111111;">Revise MRCEM</h1>
                 <p style="margin:6px 0 0; font-size:13px; color:rgba(17,24,39,.75);">Your subscription is now active</p>
               </td>
             </tr>
@@ -22,7 +22,7 @@
                   Hi {{ $subscription->user->name }},
                 </p>
                 <p style="margin:0 0 16px; font-size:14px; color:rgba(17,24,39,.8); line-height:1.6;">
-                  Thank you for subscribing. Your plan is confirmed and your MSRA resources are ready.
+                  Thank you for subscribing. Your plan is confirmed and your MRCEM resources are ready.
                 </p>
 
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc; border-radius:12px; padding:16px; border:1px solid rgba(15,23,42,.08);">
@@ -57,7 +57,7 @@
               </td>
             </tr>
           </table>
-          <p style="margin:12px 0 0; font-size:11px; color:rgba(17,24,39,.6);">(c) Revise MSRA Limited</p>
+          <p style="margin:12px 0 0; font-size:11px; color:rgba(17,24,39,.6);">(c) Revise MRCEM Limited</p>
         </td>
       </tr>
     </table>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'REVISE MSRA - Sign in')
+@section('title', 'REVISE MRCEM - Sign in')
 
 @section('content')
   <main class="page login-page">

@@ -7,8 +7,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Plan extends Model
 {
+    public const EXAM_PRIMARY = 'primary';
+    public const EXAM_INTERMEDIATE = 'intermediate';
+    public const EXAM_TYPES = [
+        self::EXAM_PRIMARY,
+        self::EXAM_INTERMEDIATE,
+    ];
+
     protected $fillable = [
         'name',
+        'exam_type',
         'duration_months',
         'price_cents',
         'currency',
@@ -18,6 +26,13 @@ class Plan extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function examLabel(): string
+    {
+        return $this->exam_type === self::EXAM_INTERMEDIATE
+            ? 'MRCEM Intermediate'
+            : 'MRCEM Primary';
+    }
 
     public function subscriptions(): HasMany
     {

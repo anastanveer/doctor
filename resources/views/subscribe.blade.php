@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'REVISE MSRA - Subscription')
+@section('title', 'REVISE MRCEM - Subscription')
 
 @section('content')
   <main class="page reg-page">
@@ -8,7 +8,7 @@
       <span class="reg-hero-accent">Subscription</span>
       <h1 class="reg-hero-title">Choose your plan</h1>
       <p class="reg-hero-sub">
-        Pick the plan that matches your exam timeline and unlock full access instantly.
+        Pick the MRCEM Primary or Intermediate plan that matches your exam timeline and unlock access instantly.
       </p>
 
       <div class="reg-grid">
@@ -30,34 +30,55 @@
               {{ $errors->first() }}
             </div>
           @endif
+          @if (!empty($allowUpgrade))
+            <div class="plan-lock" style="margin-bottom:12px;">
+              MRCEM Primary completed — choose your Intermediate plan below.
+            </div>
+          @endif
 
           <form action="{{ route('subscribe.checkout') }}" method="post">
             @csrf
             <div class="reg-form-sub">Choose your plan</div>
 
-            @foreach ($plans as $plan)
+            @foreach ($plansByExam as $examType => $plans)
+              <div class="reg-form-sub" style="margin-top:12px;">
+                {{ $examTypes[$examType] ?? 'Exam package' }}
+              </div>
               @php
-                $isSelected = old('plan_id')
-                  ? (int) old('plan_id') === $plan->id
-                  : $plan->duration_months === 3;
+                $lockIntermediate = $examType === 'intermediate' && !$canAccessIntermediate;
               @endphp
-              <label class="plan {{ $isSelected ? 'is-selected' : '' }}" data-plan="{{ $plan->label }}" data-price="&pound;{{ $plan->price_gbp }}" data-perday="{{ $plan->per_day }}">
-                <input type="radio" name="plan_id" value="{{ $plan->id }}" @checked($isSelected) />
-                <div class="plan__text">
-                  {{ $plan->label }}
-                  <span class="plan__price">&pound;{{ $plan->price_gbp }}</span>
-                  <span class="plan__hint">Access for {{ $plan->duration_months }} month{{ $plan->duration_months > 1 ? 's' : '' }}</span>
-                </div>
-              </label>
+              @if ($lockIntermediate)
+                <div class="plan-lock">Complete all MRCEM Primary MCQs to unlock Intermediate access.</div>
+              @endif
+              @foreach ($plans as $plan)
+                @php
+                  $isSelected = old('plan_id')
+                    ? (int) old('plan_id') === $plan->id
+                    : $plan->id === $defaultPlanId;
+                  $isDisabled = $lockIntermediate;
+                @endphp
+                <label class="plan {{ $isSelected ? 'is-selected' : '' }} {{ $isDisabled ? 'is-disabled' : '' }}" data-plan="{{ $plan->display_label }}" data-price="&pound;{{ $plan->price_gbp }}" data-perday="{{ $plan->per_day }}">
+                  <input type="radio" name="plan_id" value="{{ $plan->id }}" @checked($isSelected) @disabled($isDisabled) />
+                  <div class="plan__text">
+                    {{ $plan->label }}
+                    <span class="plan__price">&pound;{{ $plan->price_gbp }}</span>
+                    <span class="plan__hint">Access for {{ $plan->duration_months }} month{{ $plan->duration_months > 1 ? 's' : '' }}</span>
+                  </div>
+                </label>
+              @endforeach
             @endforeach
 
+            @php
+              $flatPlans = $plansByExam->flatten();
+              $defaultPlan = $flatPlans->firstWhere('id', $defaultPlanId) ?? $flatPlans->first();
+            @endphp
             <div class="reg-price" aria-live="polite">
               <div class="reg-price__label">Plan summary</div>
               <div class="reg-price__row">
-                <span class="reg-price__name">3-month access</span>
-                <span class="reg-price__value">&pound;29.97</span>
+                <span class="reg-price__name">{{ $defaultPlan?->display_label ?? 'Selected plan' }}</span>
+                <span class="reg-price__value">&pound;{{ $defaultPlan?->price_gbp ?? '0.00' }}</span>
               </div>
-              <div class="reg-price__meta">Cancel anytime</div>
+              <div class="reg-price__meta">{{ $defaultPlan?->per_day ?? '' }} • Cancel anytime</div>
             </div>
 
             <div class="reg-check">

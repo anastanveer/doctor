@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'REVISE MSRA - Question topics')
+@section('title', 'REVISE MRCEM - Question topics')
 @section('page_title', $topic->exists ? 'Edit question topic' : 'Create question topic')
 @section('page_sub', 'These topics appear in the MCQ question bank.')
 
@@ -23,6 +23,17 @@
           <span>Topic name</span>
         </label>
         <input name="name" type="text" value="{{ old('name', $topic->name) }}" placeholder="e.g. Cardiology" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;" />
+
+        <label class="qb-radio" style="gap:6px;">
+          <span>Exam</span>
+        </label>
+        <select name="exam_type" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;">
+          @foreach ($examTypes as $value => $label)
+            <option value="{{ $value }}" @selected(old('exam_type', $examType ?? $topic->exam_type ?? 'primary') === $value)>
+              {{ $label }}
+            </option>
+          @endforeach
+        </select>
 
         <label class="qb-radio" style="gap:6px;">
           <span>Slug (optional)</span>

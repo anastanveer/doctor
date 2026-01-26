@@ -20,7 +20,7 @@ class SubscriptionExpiringSoon extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Revise MSRA plan is expiring soon',
+            subject: 'Your Revise MRCEM plan is expiring soon',
         );
     }
 

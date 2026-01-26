@@ -17,7 +17,7 @@ class ResetPasswordNotification extends ResetPassword
         $expires = config('auth.passwords.'.config('auth.defaults.passwords').'.expire');
 
         return (new MailMessage)
-            ->subject('Reset your Revise MSRA password')
+            ->subject('Reset your Revise MRCEM password')
             ->view('emails.password-reset', [
                 'user' => $notifiable,
                 'url' => $url,

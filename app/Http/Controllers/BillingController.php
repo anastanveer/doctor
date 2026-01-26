@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Plan;
+use App\Models\Topic;
 use App\Services\StripeCheckoutService;
 use App\Services\SubscriptionService;
 use Illuminate\Http\RedirectResponse;
@@ -16,29 +17,33 @@ class BillingController extends Controller
     public function showSubscribe(): View|RedirectResponse
     {
         $user = auth()->user();
-        if ($user && $user->hasActiveSubscription()) {
+        $activeSubscription = $user?->activeSubscription();
+        $canAccessIntermediate = $user?->hasCompletedExam(Topic::EXAM_PRIMARY) ?? false;
+        $allowUpgrade = $activeSubscription
+            && $activeSubscription->plan?->exam_type === Plan::EXAM_PRIMARY
+            && $canAccessIntermediate;
+        if ($user && $user->hasActiveSubscription() && !$allowUpgrade) {
             return redirect()->route('dashboard');
         }
 
-        $plans = Plan::where('is_active', true)
+        $plansQuery = Plan::where('is_active', true)
+            ->where('name', 'like', 'MRCEM %')
             ->whereIn('duration_months', [1, 3, 6])
-            ->orderBy('duration_months')
-            ->get()
-            ->map(function (Plan $plan) {
-                $days = max(1, $plan->duration_months * 30);
-                $perDayPence = (int) round($plan->price_cents / $days);
-                $perDay = $perDayPence >= 100
-                    ? 'GBP '.number_format($perDayPence / 100, 2).' per day'
-                    : $perDayPence.'p per day';
+            ->orderBy('duration_months');
+        if ($allowUpgrade) {
+            $plansQuery->where('exam_type', Plan::EXAM_INTERMEDIATE);
+        }
+        $plans = $plansQuery->get();
 
-                $plan->price_gbp = number_format($plan->price_cents / 100, 2);
-                $plan->label = $plan->duration_months.'-month access';
-                $plan->per_day = $perDay;
+        $plans = $this->decoratePlans($plans);
+        $plansByExam = $plans->groupBy('exam_type');
+        $defaultPlanId = $this->defaultPlanId($plans);
+        $examTypes = [
+            Plan::EXAM_PRIMARY => 'MRCEM Primary',
+            Plan::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
+        ];
 
-                return $plan;
-            });
-
-        return view('subscribe', compact('plans'));
+        return view('subscribe', compact('plansByExam', 'defaultPlanId', 'examTypes', 'canAccessIntermediate', 'allowUpgrade'));
     }
 
     public function startCheckout(Request $request, StripeCheckoutService $stripe): RedirectResponse
@@ -48,10 +53,19 @@ class BillingController extends Controller
             'terms' => ['accepted'],
         ]);
 
+        $plan = Plan::find((int) $data['plan_id']);
+        if ($plan && $plan->exam_type === Plan::EXAM_INTERMEDIATE) {
+            $canAccess = $request->user()?->hasCompletedExam(Topic::EXAM_PRIMARY) ?? false;
+            if (!$canAccess) {
+                return back()->withErrors([
+                    'plan_id' => 'Complete all MRCEM Primary MCQs to unlock MRCEM Intermediate access.',
+                ]);
+            }
+        }
+
         try {
             $sessionUrl = $stripe->createCheckoutSession($request->user(), (int) $data['plan_id']);
         } catch (\Throwable $e) {
-            $plan = Plan::find((int) $data['plan_id']);
             if ($plan) {
                 app(SubscriptionService::class)->createManualSubscription($request->user(), $plan);
                 return redirect()->route('checkout.success');
@@ -103,5 +117,33 @@ class BillingController extends Controller
 
         return redirect()->route('account')
             ->with('status', 'Your subscription will end on the expiry date.');
+    }
+
+    private function decoratePlans($plans)
+    {
+        return $plans->map(function (Plan $plan) {
+            $days = max(1, $plan->duration_months * 30);
+            $perDayPence = (int) round($plan->price_cents / $days);
+            $perDay = $perDayPence >= 100
+                ? 'GBP '.number_format($perDayPence / 100, 2).' per day'
+                : $perDayPence.'p per day';
+
+            $plan->price_gbp = number_format($plan->price_cents / 100, 2);
+            $plan->exam_label = $plan->examLabel();
+            $plan->label = $plan->duration_months.'-month access';
+            $plan->display_label = $plan->exam_label.' • '.$plan->label;
+            $plan->per_day = $perDay;
+
+            return $plan;
+        });
+    }
+
+    private function defaultPlanId($plans): ?int
+    {
+        $preferred = $plans->first(function (Plan $plan) {
+            return $plan->exam_type === Plan::EXAM_PRIMARY && $plan->duration_months === 3;
+        });
+
+        return $preferred?->id ?? $plans->first()?->id;
     }
 }

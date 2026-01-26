@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'REVISE MSRA • MCQ session')
+@section('title', 'REVISE MRCEM • MCQ session')
 
 @section('content')
   <main class="mcq-session">
     <div class="container">
       <section class="mcq-session__top">
         <div>
-          <p class="mcq-kicker">Live MCQ session</p>
+          <p class="mcq-kicker">{{ $examLabel }} • Live MCQ session</p>
           <h1 class="mcq-session__title">Timed, flagged, fully responsive</h1>
         </div>
         <div class="mcq-session__meta">

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\RevisionNote;
 use App\Models\RevisionTopic;
+use App\Models\Topic;
 use Illuminate\Database\Seeder;
 
 class RevisionNotesSeeder extends Seeder
@@ -12,28 +13,130 @@ class RevisionNotesSeeder extends Seeder
     {
         $topics = [
             [
+                'name' => 'Anatomy',
+                'slug' => 'anatomy',
+                'description' => 'High-yield anatomy landmarks for the primary exam.',
+                'exam_type' => Topic::EXAM_PRIMARY,
+            ],
+            [
+                'name' => 'Physiology',
+                'slug' => 'physiology',
+                'description' => 'Core physiology principles and exam essentials.',
+                'exam_type' => Topic::EXAM_PRIMARY,
+            ],
+            [
+                'name' => 'Pharmacology',
+                'slug' => 'pharmacology',
+                'description' => 'Mechanisms, side effects, and dosing priorities.',
+                'exam_type' => Topic::EXAM_PRIMARY,
+            ],
+            [
+                'name' => 'Microbiology',
+                'slug' => 'microbiology',
+                'description' => 'Organism patterns and antimicrobial basics.',
+                'exam_type' => Topic::EXAM_PRIMARY,
+            ],
+            [
+                'name' => 'Pathology',
+                'slug' => 'pathology',
+                'description' => 'Inflammation, neoplasia, and common mechanisms.',
+                'exam_type' => Topic::EXAM_PRIMARY,
+            ],
+            [
+                'name' => 'Evidence Based Medicine',
+                'slug' => 'evidence-based-medicine',
+                'description' => 'Study types, bias, and critical appraisal.',
+                'exam_type' => Topic::EXAM_PRIMARY,
+            ],
+            [
+                'name' => 'Past Recalls',
+                'slug' => 'past-recalls',
+                'description' => 'Strategies for revising and organizing recalls.',
+                'exam_type' => Topic::EXAM_PRIMARY,
+            ],
+            [
                 'name' => 'Professional Dilemmas',
                 'slug' => 'professional-dilemmas',
                 'description' => 'Ethics, consent, confidentiality, and safe escalation pathways.',
+                'exam_type' => Topic::EXAM_INTERMEDIATE,
             ],
             [
                 'name' => 'Cardiology',
                 'slug' => 'cardiology',
                 'description' => 'Core cardiovascular presentations, investigations, and treatments.',
+                'exam_type' => Topic::EXAM_INTERMEDIATE,
             ],
             [
                 'name' => 'Respiratory',
                 'slug' => 'respiratory',
                 'description' => 'Common respiratory conditions, red flags, and management plans.',
+                'exam_type' => Topic::EXAM_INTERMEDIATE,
             ],
             [
                 'name' => 'Endocrinology',
                 'slug' => 'endocrinology',
                 'description' => 'Hormone disorders, thyroid disease, and metabolic emergencies.',
+                'exam_type' => Topic::EXAM_INTERMEDIATE,
             ],
         ];
 
         $notes = [
+            'anatomy' => [
+                [
+                    'title' => 'Upper limb anatomy essentials',
+                    'slug' => 'upper-limb-anatomy-essentials',
+                    'summary' => 'Key nerve, vessel, and compartment relationships.',
+                    'content' => "Know the course of the median, ulnar, and radial nerves including common injury patterns.\n\nIdentify major arterial branches in the upper limb and common entrapment sites.\n\nUse surface landmarks to localise joints, tendons, and compartments quickly.",
+                ],
+            ],
+            'physiology' => [
+                [
+                    'title' => 'Cardiac cycle quick review',
+                    'slug' => 'cardiac-cycle-quick-review',
+                    'summary' => 'Pressure changes, valve timing, and heart sounds.',
+                    'content' => "Track atrial and ventricular pressures through systole and diastole.\n\nRemember that S1 is mitral and tricuspid closure, while S2 is aortic and pulmonary closure.\n\nRelate changes to murmurs and common exam scenarios.",
+                ],
+            ],
+            'pharmacology' => [
+                [
+                    'title' => 'Autonomic drugs overview',
+                    'slug' => 'autonomic-drugs-overview',
+                    'summary' => 'Key receptor actions and clinical effects.',
+                    'content' => "Map alpha and beta receptor effects to cardiovascular outcomes.\n\nKnow common agents, indications, and important adverse effects.\n\nLink these actions to typical exam stems.",
+                ],
+            ],
+            'microbiology' => [
+                [
+                    'title' => 'Common gram stain patterns',
+                    'slug' => 'common-gram-stain-patterns',
+                    'summary' => 'Rapid pattern recognition for organisms.',
+                    'content' => "Gram-positive cocci in clusters suggest staphylococci.\n\nGram-negative diplococci commonly point to Neisseria species.\n\nUse morphology plus clinical context to narrow the organism.",
+                ],
+            ],
+            'pathology' => [
+                [
+                    'title' => 'Inflammation basics',
+                    'slug' => 'inflammation-basics',
+                    'summary' => 'Acute vs chronic inflammation and key mediators.',
+                    'content' => "Acute inflammation features neutrophils and exudate.\n\nChronic inflammation involves lymphocytes, macrophages, and fibrosis.\n\nKnow classic examples of necrosis types for primary recall.",
+                ],
+            ],
+            'evidence-based-medicine' => [
+                [
+                    'title' => 'Appraisal and bias checklist',
+                    'slug' => 'appraisal-and-bias-checklist',
+                    'summary' => 'Study design hierarchy and common biases.',
+                    'content' => "Use PICO to frame questions and identify the best study design.\n\nCheck for selection, performance, and attrition bias.\n\nInterpret confidence intervals alongside p-values.",
+                ],
+            ],
+            'past-recalls' => [
+                [
+                    'title' => 'Using recalls effectively',
+                    'slug' => 'using-recalls-effectively',
+                    'summary' => 'Plan a systematic approach to recalled questions.',
+                    'content' => "Group recalls by topic and map them to core concepts.\n\nFocus on understanding rather than memorising isolated answers.\n\nRevisit weak areas regularly and build confidence.",
+                ],
+            ],
             'professional-dilemmas' => [
                 [
                     'title' => 'Consent and capacity basics',

@@ -1,12 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'REVISE MSRA • Dashboard')
+@section('title', 'REVISE MRCEM • Dashboard')
 
 @section('content')
   <main class="page">
     <div class="container">
       <section class="welcome-row">
-        <h1 class="welcome-title">Welcome back, {{ auth()->user()->name }}</h1>
+        <div class="welcome-copy">
+          <h1 class="welcome-title">Welcome back, {{ auth()->user()->name }}</h1>
+          <div class="welcome-tag">{{ $examLabel }} access</div>
+        </div>
 
         <div class="stat-row">
           <div class="stat-pill stat-pill--orange">

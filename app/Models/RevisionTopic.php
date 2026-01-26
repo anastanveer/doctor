@@ -10,6 +10,7 @@ class RevisionTopic extends Model
     protected $fillable = [
         'name',
         'slug',
+        'exam_type',
         'description',
     ];
 

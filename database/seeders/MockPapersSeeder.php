@@ -5,52 +5,178 @@ namespace Database\Seeders;
 use App\Models\MockPaper;
 use App\Models\MockPaperOption;
 use App\Models\MockPaperQuestion;
+use App\Models\Topic;
 use Illuminate\Database\Seeder;
 
 class MockPapersSeeder extends Seeder
 {
     public function run(): void
     {
-        $papers = [
+        $primaryPapers = [
+            [
+                'title' => 'Primary mock paper 1 - Core sciences',
+                'slug' => 'primary-mock-paper-1',
+                'description' => 'Anatomy, physiology, microbiology, and pharmacology essentials.',
+                'order' => 1,
+                'exam_type' => Topic::EXAM_PRIMARY,
+            ],
+            [
+                'title' => 'Primary mock paper 2 - Evidence and pathology',
+                'slug' => 'primary-mock-paper-2',
+                'description' => 'Pathology, evidence based medicine, and common past recalls.',
+                'order' => 2,
+                'exam_type' => Topic::EXAM_PRIMARY,
+            ],
+        ];
+
+        $intermediatePapers = [
             [
                 'title' => 'Mock paper 1 - Clinical problem solving',
                 'slug' => 'mock-paper-1',
                 'description' => 'CPS focused mock paper with common clinical scenarios.',
                 'order' => 1,
+                'exam_type' => Topic::EXAM_INTERMEDIATE,
             ],
             [
                 'title' => 'Mock paper 2 - Clinical problem solving',
                 'slug' => 'mock-paper-2',
                 'description' => 'A second CPS paper to test core clinical decision making.',
                 'order' => 2,
+                'exam_type' => Topic::EXAM_INTERMEDIATE,
             ],
             [
                 'title' => 'Mock paper 3 - Clinical problem solving',
                 'slug' => 'mock-paper-3',
                 'description' => 'CPS practice focused on acute presentations.',
                 'order' => 3,
+                'exam_type' => Topic::EXAM_INTERMEDIATE,
             ],
             [
                 'title' => 'Mock paper 4 - Clinical problem solving',
                 'slug' => 'mock-paper-4',
                 'description' => 'CPS questions with high yield red flags.',
                 'order' => 4,
+                'exam_type' => Topic::EXAM_INTERMEDIATE,
             ],
             [
                 'title' => 'Mock paper 5 - Clinical problem solving',
                 'slug' => 'mock-paper-5',
-                'description' => 'CPS practice for common MSRA topics.',
+                'description' => 'Practice for common MRCEM topics.',
                 'order' => 5,
+                'exam_type' => Topic::EXAM_INTERMEDIATE,
             ],
             [
                 'title' => 'Mock paper 6 - Clinical problem solving',
                 'slug' => 'mock-paper-6',
                 'description' => 'Final CPS paper with mixed medical topics.',
                 'order' => 6,
+                'exam_type' => Topic::EXAM_INTERMEDIATE,
             ],
         ];
 
+        $papers = array_merge($primaryPapers, $intermediatePapers);
+
         $questions = [
+            'primary-mock-paper-1' => [
+                [
+                    'topic' => 'Anatomy',
+                    'stem' => 'The carpal tunnel contains the median nerve and how many flexor tendons?',
+                    'explanation' => 'The carpal tunnel contains nine tendons and the median nerve.',
+                    'options' => [
+                        'Seven tendons',
+                        'Eight tendons',
+                        'Nine tendons',
+                        'Ten tendons',
+                    ],
+                    'correct' => 2,
+                ],
+                [
+                    'topic' => 'Physiology',
+                    'stem' => 'Which part of the nephron is primarily responsible for glucose reabsorption?',
+                    'explanation' => 'Glucose is reabsorbed in the proximal convoluted tubule.',
+                    'options' => [
+                        'Loop of Henle',
+                        'Collecting duct',
+                        'Proximal convoluted tubule',
+                        'Distal convoluted tubule',
+                    ],
+                    'correct' => 2,
+                ],
+                [
+                    'topic' => 'Pharmacology',
+                    'stem' => 'Which antibiotic class inhibits bacterial DNA gyrase?',
+                    'explanation' => 'Fluoroquinolones inhibit DNA gyrase and topoisomerase IV.',
+                    'options' => [
+                        'Macrolides',
+                        'Fluoroquinolones',
+                        'Cephalosporins',
+                        'Tetracyclines',
+                    ],
+                    'correct' => 1,
+                ],
+                [
+                    'topic' => 'Microbiology',
+                    'stem' => 'A gram-positive cocci in clusters most likely indicates:',
+                    'explanation' => 'Staphylococci appear as gram-positive cocci in clusters.',
+                    'options' => [
+                        'Streptococcus pneumoniae',
+                        'Staphylococcus aureus',
+                        'Neisseria meningitidis',
+                        'Escherichia coli',
+                    ],
+                    'correct' => 1,
+                ],
+            ],
+            'primary-mock-paper-2' => [
+                [
+                    'topic' => 'Pathology',
+                    'stem' => 'Caseous necrosis is classically associated with:',
+                    'explanation' => 'Caseous necrosis is characteristic of tuberculosis.',
+                    'options' => [
+                        'Sarcoidosis',
+                        'Tuberculosis',
+                        'Rheumatoid arthritis',
+                        'Viral hepatitis',
+                    ],
+                    'correct' => 1,
+                ],
+                [
+                    'topic' => 'Evidence Based Medicine',
+                    'stem' => 'Which study design is best for determining the incidence of a disease?',
+                    'explanation' => 'Cohort studies follow a population over time to measure incidence.',
+                    'options' => [
+                        'Case control study',
+                        'Cohort study',
+                        'Cross-sectional study',
+                        'Case report',
+                    ],
+                    'correct' => 1,
+                ],
+                [
+                    'topic' => 'Past Recalls',
+                    'stem' => 'The most appropriate first step in evidence appraisal is to:',
+                    'explanation' => 'Start by defining a clear clinical question using PICO.',
+                    'options' => [
+                        'Search without a question',
+                        'Define a PICO question',
+                        'Jump straight to conclusions',
+                        'Only read abstracts',
+                    ],
+                    'correct' => 1,
+                ],
+                [
+                    'topic' => 'Anatomy',
+                    'stem' => 'The femoral nerve originates from which spinal roots?',
+                    'explanation' => 'The femoral nerve arises from L2 to L4.',
+                    'options' => [
+                        'L1 to L2',
+                        'L2 to L4',
+                        'L4 to S1',
+                        'S2 to S4',
+                    ],
+                    'correct' => 1,
+                ],
+            ],
             'mock-paper-1' => [
                 [
                     'topic' => 'Cardiology',

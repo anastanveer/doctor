@@ -1,6 +1,6 @@
 <footer class="footer">
   <div class="container footer-inner">
-    <div class="footer-left">© Copyright Revise MSRA Limited</div>
+    <div class="footer-left">© Copyright Revise MRCEM Limited</div>
     <div class="footer-mid">
       <span class="social-circle" aria-hidden="true">◎</span>
       <span class="social-circle" aria-hidden="true">f</span>

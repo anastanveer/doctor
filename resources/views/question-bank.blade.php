@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'REVISE MSRA • Question bank')
+@section('title', 'REVISE MRCEM • Question bank')
 
 @section('content')
   <section class="page-hero page-hero--teal">
     <div class="page-hero__inner">
-      <h1 class="page-hero__title">Question bank</h1>
+      <h1 class="page-hero__title">{{ $examLabel }} Question bank</h1>
       <div class="page-hero__meta">
         <span class="meta-pill">Total MCQs: {{ number_format($totalQuestions) }}</span>
         <span class="meta-pill meta-pill--accent">Topics: {{ number_format($totalTopics) }}</span>
@@ -20,6 +20,7 @@
         <div class="qb-head">
           <h2 class="qb-title">Full question bank session</h2>
           <p class="qb-sub">Select topics below, or start the full question bank.</p>
+          <p class="qb-note">Tip: use the header search to filter topics by first letters.</p>
         </div>
 
         <div class="qb-check">
@@ -29,7 +30,7 @@
           </label>
         </div>
 
-        <div class="topic-chips" role="list">
+        <div class="topic-chips" role="list" data-topic-filter>
           @foreach ($topics as $topic)
             <button class="chip" type="button" data-topic="{{ $topic }}" aria-pressed="false">
               <span class="chip-label">{{ $topic }}</span>
@@ -38,6 +39,7 @@
             </button>
           @endforeach
         </div>
+        <div class="topic-empty" data-topic-empty hidden>No topics match your search.</div>
 
         <div class="qb-actions">
           <button class="btn-primary-dark btn-start" type="button">Start session</button>
@@ -57,9 +59,9 @@
             </div>
           </div>
 
-          <h2 class="mastery-title">MSRA Mastery</h2>
+          <h2 class="mastery-title">MRCEM Mastery</h2>
           <p class="mastery-text">
-            With competition tougher than ever, the MSRA Mastery Course equips you with high-yield learning,
+            With competition tougher than ever, the MRCEM Mastery Course equips you with high-yield learning,
             clinchers, recalls, and expert strategies to excel.
           </p>
 
@@ -82,10 +84,38 @@
     const selectAll = document.getElementById('select-all-topics');
     const chips = [...document.querySelectorAll('.chip[data-topic]')];
     const selectedTopics = new Set();
+    const searchInput = document.querySelector('.header-search__input');
+    const emptyState = document.querySelector('[data-topic-empty]');
 
     const setChipState = (chip, isSelected) => {
       chip.classList.toggle('is-selected', isSelected);
       chip.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+    };
+
+    const filterChips = (term) => {
+      const value = (term || '').trim().toLowerCase();
+      let visibleCount = 0;
+      chips.forEach((chip) => {
+        const label = (chip.dataset.topic || '').toLowerCase();
+        const clean = label.replace(/[^a-z0-9\s]/g, ' ');
+        const words = clean.split(/\s+/).filter(Boolean);
+        const stopWords = new Set(['and', 'of', 'the', 'in', 'on', 'for', 'to', 'a', 'an', 'or', 'with']);
+        const initials = words
+          .filter((word) => !stopWords.has(word))
+          .map((word) => word[0])
+          .join('');
+        const matches = !value
+          || label.includes(value)
+          || label.startsWith(value)
+          || words.some((word) => word.startsWith(value))
+          || initials.startsWith(value);
+        chip.hidden = !matches;
+        chip.classList.toggle('is-match', Boolean(value && matches));
+        if (matches) visibleCount += 1;
+      });
+      if (emptyState) {
+        emptyState.hidden = visibleCount !== 0;
+      }
     };
 
     const selectAllTopics = () => {
@@ -149,6 +179,15 @@
       clearAllTopics();
       syncSelectAll();
     });
+
+    const initialQuery = new URLSearchParams(window.location.search).get('q') || '';
+    if (searchInput) {
+      searchInput.value = initialQuery;
+      searchInput.addEventListener('input', (event) => {
+        filterChips(event.target.value);
+      });
+    }
+    filterChips(initialQuery);
 
     startButton?.addEventListener('click', () => {
       const url = new URL("{{ route('mcq-session') }}", window.location.origin);

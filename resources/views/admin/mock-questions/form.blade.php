@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'REVISE MSRA - Mock MCQs')
+@section('title', 'REVISE MRCEM - Mock MCQs')
 @section('page_title', $question->exists ? 'Edit mock MCQ' : 'Create mock MCQ')
 @section('page_sub', 'Each MCQ appears inside the selected mock paper.')
 
@@ -20,11 +20,20 @@
 
       <div class="qb-options" style="gap:14px;">
         <label class="qb-radio" style="gap:6px;">
+          <span>Exam</span>
+        </label>
+        <select name="exam_type" id="exam-type" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;">
+          @foreach ($examTypes as $value => $label)
+            <option value="{{ $value }}" @selected(old('exam_type', $examType ?? '') === $value)>{{ $label }}</option>
+          @endforeach
+        </select>
+
+        <label class="qb-radio" style="gap:6px;">
           <span>Mock paper</span>
         </label>
-        <select name="mock_paper_id" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;">
+        <select name="mock_paper_id" id="mock-paper" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;">
           @foreach ($papers as $paper)
-            <option value="{{ $paper->id }}" @selected((int) old('mock_paper_id', $selectedPaper ?? $question->mock_paper_id) === $paper->id)>{{ $paper->title }}</option>
+            <option value="{{ $paper->id }}" data-exam="{{ $paper->exam_type }}" @selected((int) old('mock_paper_id', $selectedPaper ?? $question->mock_paper_id) === $paper->id)>{{ $paper->title }}</option>
           @endforeach
         </select>
 
@@ -81,6 +90,8 @@
   <script>
     const optionsList = document.getElementById('options-list');
     const addOption = document.getElementById('add-option');
+    const examSelect = document.getElementById('exam-type');
+    const paperSelect = document.getElementById('mock-paper');
 
     const reindexOptions = () => {
       optionsList.querySelectorAll('.admin-option').forEach((row, idx) => {
@@ -142,5 +153,27 @@
         optionsList.insertBefore(dragItem, afterElement);
       }
     });
+
+    const filterPapers = () => {
+      const exam = examSelect.value;
+      let firstVisible = null;
+
+      [...paperSelect.options].forEach((option) => {
+        const matches = option.dataset.exam === exam;
+        option.hidden = !matches;
+        if (matches && !firstVisible) {
+          firstVisible = option;
+        }
+      });
+
+      if (paperSelect.selectedOptions.length === 0 || paperSelect.selectedOptions[0].hidden) {
+        if (firstVisible) {
+          paperSelect.value = firstVisible.value;
+        }
+      }
+    };
+
+    examSelect.addEventListener('change', filterPapers);
+    filterPapers();
   </script>
 @endpush

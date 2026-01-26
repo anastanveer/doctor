@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'REVISE MSRA • Coupons')
+@section('title', 'REVISE MRCEM • Coupons')
 @section('page_title', 'Coupons')
 @section('page_sub', 'Create discount codes for subscriptions and campaigns.')
 

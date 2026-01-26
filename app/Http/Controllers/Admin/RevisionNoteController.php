@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\RevisionNote;
 use App\Models\RevisionTopic;
+use App\Models\Topic;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -12,22 +13,38 @@ use Illuminate\View\View;
 
 class RevisionNoteController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $examTypes = $this->examTypes();
+        $examType = $request->input('exam_type');
+        if (!array_key_exists($examType, $examTypes)) {
+            $examType = null;
+        }
+
         $notes = RevisionNote::with('topic')
+            ->when($examType, function ($query) use ($examType) {
+                $query->whereHas('topic', fn ($subquery) => $subquery->where('exam_type', $examType));
+            })
             ->orderByDesc('updated_at')
             ->paginate(15);
 
-        return view('admin.revision-notes.index', compact('notes'));
+        return view('admin.revision-notes.index', compact('notes', 'examTypes', 'examType'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
         $topics = RevisionTopic::orderBy('name')->get();
+        $examTypes = $this->examTypes();
+        $examType = $request->input('exam_type');
+        if (!array_key_exists($examType, $examTypes)) {
+            $examType = Topic::EXAM_PRIMARY;
+        }
 
         return view('admin.revision-notes.form', [
             'note' => new RevisionNote(),
             'topics' => $topics,
+            'examTypes' => $examTypes,
+            'examType' => $examType,
         ]);
     }
 
@@ -45,10 +62,13 @@ class RevisionNoteController extends Controller
     public function edit(RevisionNote $revisionNote): View
     {
         $topics = RevisionTopic::orderBy('name')->get();
+        $examType = $revisionNote->topic?->exam_type ?? Topic::EXAM_PRIMARY;
 
         return view('admin.revision-notes.form', [
             'note' => $revisionNote,
             'topics' => $topics,
+            'examTypes' => $this->examTypes(),
+            'examType' => $examType,
         ]);
     }
 
@@ -99,5 +119,13 @@ class RevisionNoteController extends Controller
         }
 
         return $slug;
+    }
+
+    private function examTypes(): array
+    {
+        return [
+            Topic::EXAM_PRIMARY => 'MRCEM Primary',
+            Topic::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
+        ];
     }
 }

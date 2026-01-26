@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>@yield('title', 'Admin • REVISE MSRA')</title>
+  <title>@yield('title', 'Admin • REVISE MRCEM')</title>
   <link rel="stylesheet" href="{{ asset('styles/custom.css') }}" />
   @stack('head')
 </head>

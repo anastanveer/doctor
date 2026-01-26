@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'REVISE MSRA • Subscriptions')
+@section('title', 'REVISE MRCEM • Subscriptions')
 @section('page_title', 'Subscriptions')
 @section('page_sub', 'Monitor renewals, expirations, and coupon usage.')
 
@@ -15,6 +15,7 @@
           <div class="admin-row admin-row--head">
             <span>User</span>
             <span>Plan</span>
+            <span>Exam</span>
             <span>Status</span>
             <span>Started</span>
             <span>Expires</span>
@@ -24,6 +25,7 @@
           <div class="admin-row">
             <span>{{ $subscription->user?->name ?? '—' }}</span>
             <span>{{ $subscription->plan?->name ?? '—' }}</span>
+            <span>{{ $subscription->plan?->examLabel() ?? '—' }}</span>
             <span class="status-pill {{ $subscription->status === 'expired' ? 'status-pill--muted' : '' }}">{{ $subscription->status }}</span>
             <span>{{ $subscription->started_at->format('d M Y') }}</span>
             <span>{{ $subscription->expires_at->format('d M Y') }}</span>

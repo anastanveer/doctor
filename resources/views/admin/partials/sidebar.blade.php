@@ -2,7 +2,7 @@
   <div class="admin-brand">
     <span class="brand-mark">R</span>
     <div>
-      <div class="admin-brand__title">REVISE<span>MSRA</span></div>
+      <div class="admin-brand__title">REVISE<span>MRCEM</span></div>
       <div class="admin-brand__tag">Admin</div>
     </div>
   </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'REVISE MSRA • Admin dashboard')
+@section('title', 'REVISE MRCEM • Admin dashboard')
 @section('page_title', 'eProp control center')
 @section('page_sub', 'Track performance, subscriptions, and cohorts in real time.')
 

@@ -12,6 +12,7 @@ class QuestionSeeder extends Seeder
     public function run(): void
     {
         $topics = Topic::pluck('id', 'slug');
+        $topicExamTypes = Topic::pluck('exam_type', 'slug');
         $topicModels = Topic::orderBy('name')->get();
 
         $questions = [
@@ -535,6 +536,7 @@ class QuestionSeeder extends Seeder
 
         foreach ($questions as $payload) {
             $payload['topic_id'] = $topics[$payload['topic_slug']] ?? null;
+            $payload['exam_type'] = $topicExamTypes[$payload['topic_slug']] ?? Topic::EXAM_PRIMARY;
             $this->storeQuestion($payload, $existingStems);
         }
 
@@ -603,6 +605,7 @@ class QuestionSeeder extends Seeder
 
         return [
             'topic_id' => $topic->id,
+            'exam_type' => $topic->exam_type ?? Topic::EXAM_PRIMARY,
             'type' => $type,
             'difficulty' => $difficulty,
             'stem' => $stem,
@@ -752,6 +755,7 @@ class QuestionSeeder extends Seeder
 
         $question = Question::create([
             'topic_id' => $payload['topic_id'] ?? null,
+            'exam_type' => $payload['exam_type'] ?? Topic::EXAM_PRIMARY,
             'type' => $payload['type'],
             'difficulty' => $payload['difficulty'],
             'stem' => $payload['stem'],

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'REVISE MSRA • Your account')
+@section('title', 'REVISE MRCEM • Your account')
 
 @section('content')
   <main class="page">
@@ -49,7 +49,7 @@
           </div>
 
           <div class="form-row">
-            <label for="examDate">Date of your MSRA exam</label>
+            <label for="examDate">Date of your MRCEM exam</label>
             <div class="form-help">If entered, a countdown is displayed on your dashboard</div>
             <input id="examDate" type="date" value="2026-02-20" />
           </div>
@@ -101,6 +101,10 @@
                 <strong>{{ $activeSubscription->plan->name }}</strong>
               </div>
               <div class="sub-row">
+                <span>Exam</span>
+                <strong>{{ $activeSubscription->plan->examLabel() }}</strong>
+              </div>
+              <div class="sub-row">
                 <span>Start date</span>
                 <strong>{{ $activeSubscription->started_at->format('d M Y') }}</strong>
               </div>
@@ -116,6 +120,12 @@
               <p class="sub-empty">No active subscription. Choose a plan to unlock your dashboard.</p>
             @endif
 
+            @if (!$canAccessIntermediate)
+              <div class="sub-foot" style="margin-top:10px;">
+                Complete all MRCEM Primary MCQs to unlock Intermediate plans.
+              </div>
+            @endif
+
             <form class="sub-plan-form" method="post" action="{{ route('subscribe.checkout') }}">
               @csrf
               <input type="hidden" name="terms" value="1" />
@@ -124,8 +134,11 @@
                   <label class="sub-plan-label" for="plan-change">Change plan</label>
                   <select id="plan-change" name="plan_id" class="sub-plan-select">
                     @foreach ($plans as $plan)
-                      <option value="{{ $plan->id }}" @selected($activeSubscription?->plan_id === $plan->id)>
-                        {{ $plan->label }} - &pound;{{ $plan->price_gbp }}
+                      @php
+                        $locked = $plan->exam_type === 'intermediate' && !$canAccessIntermediate;
+                      @endphp
+                      <option value="{{ $plan->id }}" @selected($activeSubscription?->plan_id === $plan->id) @disabled($locked)>
+                        {{ $plan->display_label }} - &pound;{{ $plan->price_gbp }}{{ $locked ? ' (locked)' : '' }}
                       </option>
                     @endforeach
                   </select>

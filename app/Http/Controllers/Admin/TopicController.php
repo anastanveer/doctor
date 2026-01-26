@@ -14,17 +14,30 @@ class TopicController extends Controller
 {
     public function index(): View
     {
+        $examType = request('exam_type');
         $topics = Topic::withCount('questions')
+            ->when($examType, fn ($query) => $query->where('exam_type', $examType))
             ->orderBy('name')
-            ->paginate(12);
+            ->paginate(12)
+            ->withQueryString();
 
-        return view('admin.topics.index', compact('topics'));
+        $examTypes = [
+            Topic::EXAM_PRIMARY => 'MRCEM Primary',
+            Topic::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
+        ];
+
+        return view('admin.topics.index', compact('topics', 'examTypes', 'examType'));
     }
 
     public function create(): View
     {
         return view('admin.topics.form', [
             'topic' => new Topic(),
+            'examTypes' => [
+                Topic::EXAM_PRIMARY => 'MRCEM Primary',
+                Topic::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
+            ],
+            'examType' => request('exam_type', Topic::EXAM_PRIMARY),
         ]);
     }
 
@@ -42,7 +55,14 @@ class TopicController extends Controller
 
     public function edit(Topic $topic): View
     {
-        return view('admin.topics.form', compact('topic'));
+        return view('admin.topics.form', [
+            'topic' => $topic,
+            'examTypes' => [
+                Topic::EXAM_PRIMARY => 'MRCEM Primary',
+                Topic::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
+            ],
+            'examType' => $topic->exam_type ?? Topic::EXAM_PRIMARY,
+        ]);
     }
 
     public function update(Request $request, Topic $topic): RedirectResponse
@@ -74,6 +94,10 @@ class TopicController extends Controller
                 'string',
                 'max:120',
                 Rule::unique('topics', 'name')->ignore($topic?->id),
+            ],
+            'exam_type' => [
+                'required',
+                Rule::in(Topic::EXAM_TYPES),
             ],
             'slug' => [
                 'nullable',

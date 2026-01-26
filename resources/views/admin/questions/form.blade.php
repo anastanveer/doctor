@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'REVISE MSRA • Question admin')
+@section('title', 'REVISE MRCEM • Question admin')
 @section('page_title', $question->exists ? 'Edit question' : 'Create question')
 @section('page_sub', 'Build single, multiple, ordering, matching, and short-answer formats.')
 
@@ -20,12 +20,29 @@
 
         <div class="qb-options" style="gap:14px;">
           <label class="qb-radio" style="gap:6px;">
+            <span>Exam</span>
+          </label>
+          <select name="exam_type" id="exam-type" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;">
+            @foreach ($examTypes as $value => $label)
+              <option value="{{ $value }}" @selected(old('exam_type', $examType ?? 'primary') === $value)>
+                {{ $label }}
+              </option>
+            @endforeach
+          </select>
+
+          <label class="qb-radio" style="gap:6px;">
             <span>Topic</span>
           </label>
-          <select name="topic_id" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;">
+          <select name="topic_id" id="topic-select" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;">
             <option value="">No topic</option>
             @foreach ($topics as $topic)
-              <option value="{{ $topic->id }}" @selected($question->topic_id === $topic->id)>{{ $topic->name }}</option>
+              <option
+                value="{{ $topic->id }}"
+                data-exam-type="{{ $topic->exam_type }}"
+                @selected($question->topic_id === $topic->id)
+              >
+                {{ $topic->name }}
+              </option>
             @endforeach
           </select>
 
@@ -100,6 +117,33 @@
   <script>
     const optionsList = document.getElementById('options-list');
     const addOption = document.getElementById('add-option');
+    const examSelect = document.getElementById('exam-type');
+    const topicSelect = document.getElementById('topic-select');
+
+    const syncTopics = () => {
+      if (!examSelect || !topicSelect) return;
+      const target = examSelect.value;
+      let hasVisible = false;
+      [...topicSelect.options].forEach((option) => {
+        if (!option.value) {
+          option.hidden = false;
+          return;
+        }
+        const examType = option.getAttribute('data-exam-type');
+        const match = !target || examType === target;
+        option.hidden = !match;
+        if (match) {
+          hasVisible = true;
+        }
+      });
+      const selected = topicSelect.selectedOptions[0];
+      if (selected && selected.hidden) {
+        topicSelect.value = '';
+      }
+      if (!hasVisible) {
+        topicSelect.value = '';
+      }
+    };
 
     const reindexOptions = () => {
       optionsList.querySelectorAll('.admin-option').forEach((row, idx) => {
@@ -133,6 +177,11 @@
     };
 
     addOption.addEventListener('click', createOptionRow);
+
+    if (examSelect) {
+      examSelect.addEventListener('change', syncTopics);
+      syncTopics();
+    }
 
     optionsList.addEventListener('click', (event) => {
       if (event.target.classList.contains('remove-option')) {

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'REVISE MSRA - Payment success')
+@section('title', 'REVISE MRCEM - Payment success')
 
 @section('content')
   <main class="page account-page">

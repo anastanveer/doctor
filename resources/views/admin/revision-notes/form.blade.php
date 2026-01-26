@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'REVISE MSRA - Revision notes')
+@section('title', 'REVISE MRCEM - Revision notes')
 @section('page_title', $note->exists ? 'Edit revision note' : 'Create revision note')
 @section('page_sub', 'Each note appears under a topic and opens as a detailed article.')
 
@@ -20,11 +20,20 @@
 
       <div class="qb-options" style="gap:14px;">
         <label class="qb-radio" style="gap:6px;">
+          <span>Exam</span>
+        </label>
+        <select name="exam_type" id="exam-type" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;">
+          @foreach ($examTypes as $value => $label)
+            <option value="{{ $value }}" @selected(old('exam_type', $examType ?? '') === $value)>{{ $label }}</option>
+          @endforeach
+        </select>
+
+        <label class="qb-radio" style="gap:6px;">
           <span>Topic</span>
         </label>
-        <select name="revision_topic_id" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;">
+        <select name="revision_topic_id" id="revision-topic" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;">
           @foreach ($topics as $topic)
-            <option value="{{ $topic->id }}" @selected((int) old('revision_topic_id', $note->revision_topic_id) === $topic->id)>{{ $topic->name }}</option>
+            <option value="{{ $topic->id }}" data-exam="{{ $topic->exam_type }}" @selected((int) old('revision_topic_id', $note->revision_topic_id) === $topic->id)>{{ $topic->name }}</option>
           @endforeach
         </select>
 
@@ -55,3 +64,32 @@
     </form>
   </div>
 @endsection
+
+@push('scripts')
+  <script>
+    const examSelect = document.getElementById('exam-type');
+    const topicSelect = document.getElementById('revision-topic');
+
+    const filterTopics = () => {
+      const exam = examSelect.value;
+      let firstVisible = null;
+
+      [...topicSelect.options].forEach((option) => {
+        const matches = option.dataset.exam === exam;
+        option.hidden = !matches;
+        if (matches && !firstVisible) {
+          firstVisible = option;
+        }
+      });
+
+      if (topicSelect.selectedOptions.length === 0 || topicSelect.selectedOptions[0].hidden) {
+        if (firstVisible) {
+          topicSelect.value = firstVisible.value;
+        }
+      }
+    };
+
+    examSelect.addEventListener('change', filterTopics);
+    filterTopics();
+  </script>
+@endpush

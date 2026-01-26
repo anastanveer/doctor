@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'REVISE MSRA • Flashcards')
+@section('title', 'REVISE MRCEM • Flashcards')
 
 @section('content')
   <section class="page-hero page-hero--purple">
@@ -13,21 +13,21 @@
     <div class="container fc-layout">
       <section class="fc-copy">
         <h2 class="fc-h2">
-          🚀 ReviseMSRA High-Yield Flashcards: Active recall for MSRA success
+          🚀 ReviseMRCEM High-Yield Flashcards: Active recall for MRCEM success
         </h2>
 
         <ul class="fc-bullets">
-          <li>The MSRA is <strong>more competitive than ever</strong>. With competition ratios at record highs, a single mark could mean the difference between securing your dream NHS training post, or waiting another year.</li>
-          <li>The ReviseMSRA High-Yield Flashcards will help you lock in the <strong>most critical MSRA concepts and guidelines</strong>, with <strong>exam-focused active recall</strong> — giving you the knowledge to maximise your score and outperform your competition.</li>
+          <li>The MRCEM is <strong>more competitive than ever</strong>. With competition ratios at record highs, a single mark could mean the difference between securing your dream NHS training post, or waiting another year.</li>
+          <li>The ReviseMRCEM High-Yield Flashcards will help you lock in the <strong>most critical MRCEM concepts and guidelines</strong>, with <strong>exam-focused active recall</strong> — giving you the knowledge to maximise your score and outperform your competition.</li>
           <li class="fc-links">
             <a href="#">See Flashcard Demo</a> | <a href="#">See Before You Subscribe</a>
           </li>
         </ul>
 
         <div class="fc-section">
-          <h3>🧠 4,000+ Flashcards Focused on the Most Commonly Tested MSRA Concepts</h3>
+          <h3>🧠 4,000+ Flashcards Focused on the Most Commonly Tested MRCEM Concepts</h3>
           <ul class="fc-checks">
-            <li>Fully aligned to <strong>NICE</strong> and <strong>UK clinical guidelines</strong> — exactly what the MSRA tests.</li>
+            <li>Fully aligned to <strong>NICE</strong> and <strong>UK clinical guidelines</strong> — exactly what the MRCEM tests.</li>
             <li>Focus on <strong>first-line investigations</strong>, management, and classic clinical presentations.</li>
             <li>Built on <strong>Active Recall</strong> — an evidence-based revision strategy to maximise retention & exam results.</li>
             <li>The perfect addition to any question bank — <strong>lock in the knowledge you need</strong> for exam day.</li>
@@ -37,13 +37,13 @@
         <div class="fc-section">
           <h3>⚡ Turn Knowledge Into Second Nature</h3>
           <p class="fc-muted">
-            Every flashcard is designed to ensure you <strong>master the key facts</strong> that drive MSRA questions — turning guidelines into instinctive answers you can apply under exam pressure.
+            Every flashcard is designed to ensure you <strong>master the key facts</strong> that drive MRCEM questions — turning guidelines into instinctive answers you can apply under exam pressure.
           </p>
         </div>
 
         <div class="fc-section">
           <h3>🔒 Our Risk-Free Guarantee</h3>
-          <p class="fc-muted">MSRA success guaranteed or 100% money back*</p>
+          <p class="fc-muted">MRCEM success guaranteed or 100% money back*</p>
         </div>
 
         <div class="fc-section">
@@ -56,7 +56,7 @@
         </div>
 
         <div class="fc-callout">
-          ⚡ Subscribe to our MSRA High-Yield Flashcards — secure your access today and focus on clinchers and frequently examined facts ⚡
+          ⚡ Subscribe to our MRCEM High-Yield Flashcards — secure your access today and focus on clinchers and frequently examined facts ⚡
         </div>
       </section>
 

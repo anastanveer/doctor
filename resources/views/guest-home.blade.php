@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'REVISE MSRA • Home')
+@section('title', 'REVISE MRCEM • Home')
 
 @push('head')
 <style>
@@ -12,8 +12,8 @@
 
   /* HERO */
   .guest-hero{
-    background: var(--teal);
-    padding: 72px 0 56px;
+    background: linear-gradient(120deg, #2a1f4d 0%, #3b2b77 55%, #5133a0 100%);
+    padding: 78px 0 62px;
     position: relative;
     overflow: hidden;
   }
@@ -24,7 +24,7 @@
     width: 520px;
     height: 520px;
     border-radius: 999px;
-    background: rgba(255,255,255,.22);
+    background: rgba(255,255,255,.12);
     filter: blur(2px);
     transform: rotate(12deg);
   }
@@ -39,7 +39,7 @@
     font-family:"acumin-pro-condensed", sans-serif;
     font-size: 48px;
     font-weight: 700;
-    color:#111;
+    color:#f8f3ff;
     line-height:1.04;
   }
   .guest-hero__bullets{
@@ -53,7 +53,7 @@
   .guest-hero__bullets li{
     position:relative;
     padding-left: 30px;
-    color: rgba(17,24,39,.85);
+    color: rgba(248,243,255,.8);
     font-size: 13px;
     line-height: 1.6;
   }
@@ -65,8 +65,8 @@
     border-radius: 8px;
     display:grid;
     place-items:center;
-    background: rgba(255,255,255,.35);
-    border: 1px solid rgba(0,0,0,.10);
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.2);
     font-weight: 900;
   }
   .guest-hero__actions{
@@ -82,11 +82,11 @@
     height: 44px;
     padding: 0 16px;
     border-radius: 10px;
-    background:#0b0b0c;
+    background:#6a4bff;
     color:#fff;
     text-decoration:none;
     font-weight: 800;
-    box-shadow: 0 18px 34px rgba(0,0,0,.18);
+    box-shadow: 0 18px 34px rgba(22,14,54,.32);
   }
   .btn-ghost{
     display:inline-flex;
@@ -95,9 +95,9 @@
     height: 44px;
     padding: 0 16px;
     border-radius: 10px;
-    background: rgba(255,255,255,.35);
-    border: 1px solid rgba(0,0,0,.15);
-    color:#111;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.28);
+    color:#f8f3ff;
     text-decoration:none;
     font-weight: 800;
   }
@@ -106,27 +106,13 @@
     gap:10px;
     flex-wrap:wrap;
   }
-  .guest-hero__placeholder{
-    width: 100%;
-    height: 280px;
-    border-radius: 16px;
-    border: 1px dashed rgba(15,23,42,.18);
-    background: linear-gradient(135deg, rgba(255,255,255,.55), rgba(99,215,207,.18));
-    display:grid;
-    place-items:center;
-    font-size: 12px;
-    font-weight: 900;
-    color: rgba(17,24,39,.55);
-    letter-spacing: .12em;
-    text-transform: uppercase;
-  }
   .trust-pill{
     font-size: 12px;
-    color: rgba(17,24,39,.80);
+    color: rgba(248,243,255,.8);
     padding: 7px 10px;
     border-radius: 999px;
-    background: rgba(255,255,255,.30);
-    border: 1px solid rgba(0,0,0,.08);
+    background: rgba(255,255,255,.16);
+    border: 1px solid rgba(255,255,255,.18);
   }
 
   /* Right orbit */
@@ -159,8 +145,8 @@
     margin-top: 18px;
     border-radius: 14px;
     padding: 14px 14px 12px;
-    border: 1px solid rgba(0,0,0,.10);
-    background: rgba(255,255,255,.30);
+    border: 1px solid rgba(255,255,255,.2);
+    background: rgba(255,255,255,.08);
     backdrop-filter: blur(6px);
   }
   .hero-card__top{ display:flex; gap:8px; margin-bottom: 10px; }
@@ -178,14 +164,157 @@
   }
   .hero-card__title{
     font-weight: 900;
-    color:#111;
+    color:#f8f3ff;
     font-size: 14px;
   }
   .hero-card__text{
     margin: 6px 0 0;
-    color: rgba(17,24,39,.78);
+    color: rgba(248,243,255,.78);
     font-size: 13px;
     line-height: 1.55;
+  }
+
+  .hero-visual{
+    position: relative;
+    border-radius: 18px;
+    padding: 18px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(255,255,255,.08);
+    box-shadow: 0 30px 60px rgba(19,12,46,.45);
+    display:grid;
+    gap:14px;
+  }
+  .hero-mini{
+    border-radius: 14px;
+    padding: 12px;
+    border: 1px solid rgba(255,255,255,.2);
+    background: rgba(255,255,255,.12);
+    color:#f8f3ff;
+  }
+  .hero-mini__tag{
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(248,243,255,.7);
+  }
+  .hero-mini__title{
+    margin: 6px 0 4px;
+    font-size: 15px;
+    font-weight: 800;
+  }
+  .hero-mini__price{
+    font-size: 12px;
+    color: rgba(248,243,255,.7);
+  }
+
+  /* PACKAGES */
+  .guest-packages{
+    padding: 34px 0 18px;
+    background: #f3f0ff;
+  }
+  .package-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap: 18px;
+    margin-bottom: 20px;
+  }
+  .package-lead{
+    margin: 0;
+    font-size: 13px;
+    color: rgba(27,20,52,.68);
+    max-width: 520px;
+  }
+  .package-grid{
+    display:grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 20px;
+  }
+  .package-card{
+    border-radius: 16px;
+    padding: 18px;
+    background: #fff;
+    border: 1px solid rgba(27,20,52,.08);
+    box-shadow: 0 22px 48px rgba(26,18,66,.12);
+  }
+  .package-tag{
+    display:inline-flex;
+    align-items:center;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(91,69,212,.12);
+    color:#3b2aa0;
+    border: 1px solid rgba(91,69,212,.2);
+  }
+  .package-title{
+    margin: 12px 0 6px;
+    font-size: 18px;
+    font-weight: 900;
+    color:#1b1434;
+  }
+  .package-sub{
+    margin: 0 0 12px;
+    color: rgba(27,20,52,.7);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .package-list{
+    list-style:none;
+    margin: 0 0 14px;
+    padding: 0;
+    display:grid;
+    gap: 8px;
+  }
+  .package-list li{
+    position:relative;
+    padding-left: 22px;
+    font-size: 12px;
+    color: rgba(27,20,52,.78);
+  }
+  .package-list li::before{
+    content:"\2713";
+    position:absolute;
+    left:0;
+    top:1px;
+    font-weight: 900;
+    font-size: 11px;
+    color:#5b45d4;
+  }
+  .package-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #f6f4ff;
+    border: 1px solid rgba(91,69,212,.08);
+    margin-bottom: 10px;
+  }
+  .package-row:last-child{ margin-bottom: 0; }
+  .package-duration{
+    font-size: 12px;
+    color: rgba(27,20,52,.7);
+  }
+  .package-price{
+    font-size: 15px;
+    font-weight: 800;
+    color:#1b1434;
+  }
+  .package-cta{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background:#5b45d4;
+    color:#fff;
+    text-decoration:none;
+    font-size: 12px;
+    font-weight: 700;
   }
 
   /* VIDEO */
@@ -423,7 +552,7 @@
   /* MEMBERSHIP */
   .guest-plan{
     padding: 30px 0 36px;
-    background: #fff8f2;
+    background: #f9f7ff;
   }
   .guest-plan__grid{
     display:grid;
@@ -480,9 +609,9 @@
     text-transform: uppercase;
     padding: 6px 10px;
     border-radius: 999px;
-    background: rgba(99,215,207,.18);
-    border: 1px solid rgba(99,215,207,.35);
-    color:#111;
+    background: rgba(91,69,212,.12);
+    border: 1px solid rgba(91,69,212,.25);
+    color:#3b2aa0;
   }
   .plan-title{
     margin: 10px 0 4px;
@@ -529,7 +658,7 @@
 
   /* CTA ORANGE */
   .guest-cta{
-    background: var(--orange);
+    background: linear-gradient(120deg, #32225c 0%, #4a3192 55%, #5b45d4 100%);
     padding: 28px 0 30px;
   }
   .guest-cta__inner{ text-align:center; }
@@ -538,11 +667,11 @@
     font-family:"acumin-pro-condensed", sans-serif;
     font-size: 26px;
     font-weight: 700;
-    color:#111;
+    color:#f8f3ff;
   }
   .guest-cta__sub{
     margin: 0 0 12px;
-    color: rgba(17,24,39,.75);
+    color: rgba(248,243,255,.75);
     font-size: 13px;
   }
   .guest-cta__actions{
@@ -552,12 +681,13 @@
     flex-wrap:wrap;
   }
   .btn-primary--dark{
-    background:#0b0b0c;
+    background:#5b45d4;
     color:#fff;
   }
   .btn-ghost--dark{
-    background: rgba(255,255,255,.35);
-    border: 1px solid rgba(0,0,0,.12);
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.3);
+    color:#f8f3ff;
   }
 
   /* responsive */
@@ -566,11 +696,13 @@
     .review-grid{ grid-template-columns: 1fr; }
     .guest-video__player{ height: 240px; }
     .guest-hero__title{ font-size: 36px; }
-    .guest-hero__placeholder{ height: 220px; }
+    .guest-hero__right{ order:-1; }
     .guest-proof__grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
     .guest-steps__head{ flex-direction: column; align-items:flex-start; }
     .guest-steps__grid{ grid-template-columns: 1fr; }
     .guest-plan__grid{ grid-template-columns: 1fr; }
+    .package-head{ flex-direction: column; align-items:flex-start; }
+    .package-grid{ grid-template-columns: 1fr; }
   }
 </style>
 @endpush
@@ -580,13 +712,13 @@
     <section class="guest-hero">
       <div class="container guest-hero__grid">
         <div class="guest-hero__left">
-          <h1 class="guest-hero__title">The ultimate MSRA revision resource</h1>
+          <h1 class="guest-hero__title">Pass your MRCEM exams the first time.</h1>
 
           <ul class="guest-hero__bullets">
-            <li>Access 3,000+ quality-assured MSRA-style questions.</li>
-            <li>Explore revision notes covering the complete MSRA curriculum.</li>
-            <li>High-yield Professional Dilemmas preparation materials.</li>
-            <li>Mock papers built from previous exam content.</li>
+            <li>Dedicated question banks for MRCEM Primary and MRCEM Intermediate.</li>
+            <li>Timed and practice modes with detailed explanations.</li>
+            <li>Track progress across every topic and blueprint domain.</li>
+            <li>Mock papers and revision notes built for the MRCEM syllabus.</li>
           </ul>
 
           <div class="guest-hero__actions">
@@ -601,15 +733,112 @@
           </div>
 
           <div class="hero-card">
-            <div class="hero-card__title">Everything in one place</div>
+            <div class="hero-card__title">Two exams, two focused packages</div>
             <p class="hero-card__text">
-              Questions, revision notes, flashcards, and mock papers -- designed to help you peak on exam day.
+              Start with MRCEM Primary, then unlock MRCEM Intermediate when you are ready.
             </p>
           </div>
         </div>
 
         <div class="guest-hero__right">
-          <div class="guest-hero__placeholder" aria-hidden="true">560 x 320</div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hero-mini">
+              <div class="hero-mini__tag">Primary</div>
+              <div class="hero-mini__title">MRCEM Primary</div>
+              <div class="hero-mini__price">From £25 per month</div>
+            </div>
+            <div class="hero-mini">
+              <div class="hero-mini__tag">Intermediate</div>
+              <div class="hero-mini__title">MRCEM Intermediate</div>
+              <div class="hero-mini__price">Advanced question bank</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="guest-packages">
+      <div class="container">
+        <div class="package-head">
+          <div>
+            <h2 class="guest-h2 guest-h2--left">Choose your MRCEM package</h2>
+            <p class="package-lead">
+              MRCEM Primary and MRCEM Intermediate are purchased separately. Complete Primary first,
+              then move to Intermediate when you are ready.
+            </p>
+          </div>
+        </div>
+
+        <div class="package-grid">
+          <article class="package-card">
+            <span class="package-tag">Most popular</span>
+            <h3 class="package-title">MRCEM Primary</h3>
+            <p class="package-sub">
+              Foundational sciences covered in a focused, exam-aligned MCQ bank.
+            </p>
+            <ul class="package-list">
+              <li>Anatomy, Physiology, Pharmacology, Microbiology, Pathology</li>
+              <li>Evidence-based medicine and past recalls</li>
+              <li>Timed exams and practice mode</li>
+              <li>Detailed explanations and progress tracking</li>
+            </ul>
+            <div class="package-row">
+              <div>
+                <div class="package-duration">1 Month Access</div>
+                <div class="package-price">£25</div>
+              </div>
+              <a class="package-cta" href="{{ route('register') }}">Subscribe now</a>
+            </div>
+            <div class="package-row">
+              <div>
+                <div class="package-duration">3 Months Access</div>
+                <div class="package-price">£45</div>
+              </div>
+              <a class="package-cta" href="{{ route('register') }}">Subscribe now</a>
+            </div>
+            <div class="package-row">
+              <div>
+                <div class="package-duration">6 Months Access</div>
+                <div class="package-price">£55</div>
+              </div>
+              <a class="package-cta" href="{{ route('register') }}">Subscribe now</a>
+            </div>
+          </article>
+
+          <article class="package-card">
+            <span class="package-tag">Advanced</span>
+            <h3 class="package-title">MRCEM Intermediate Question Bank</h3>
+            <p class="package-sub">
+              Higher-level questions covering medical and emergency specialties.
+            </p>
+            <ul class="package-list">
+              <li>Specialty topics across cardiology, neurology, respiratory, and more</li>
+              <li>Emergency presentations, trauma, and resuscitation</li>
+              <li>Procedural skills and advanced airway management</li>
+              <li>Detailed explanations and performance analytics</li>
+            </ul>
+            <div class="package-row">
+              <div>
+                <div class="package-duration">1 Month Access</div>
+                <div class="package-price">£25</div>
+              </div>
+              <a class="package-cta" href="{{ route('register') }}">Subscribe now</a>
+            </div>
+            <div class="package-row">
+              <div>
+                <div class="package-duration">3 Months Access</div>
+                <div class="package-price">£45</div>
+              </div>
+              <a class="package-cta" href="{{ route('register') }}">Subscribe now</a>
+            </div>
+            <div class="package-row">
+              <div>
+                <div class="package-duration">6 Months Access</div>
+                <div class="package-price">£50</div>
+              </div>
+              <a class="package-cta" href="{{ route('register') }}">Subscribe now</a>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -641,7 +870,7 @@
               </svg>
             </div>
             <div class="proof-value"><span class="count-up" data-count="3000" data-suffix="+">0</span></div>
-            <div class="proof-label">MSRA-style questions</div>
+            <div class="proof-label">MRCEM-style questions</div>
             <div class="proof-sub">Structured to mirror the exam blueprint and tone.</div>
           </article>
 
@@ -738,7 +967,7 @@
 
     <section class="guest-reviews">
       <div class="container">
-        <h2 class="guest-h2">Ace your exam with Revise MSRA</h2>
+        <h2 class="guest-h2">Ace your exam with Revise MRCEM</h2>
 
         <div class="review-grid">
           <article class="review-card">
@@ -746,13 +975,13 @@
               <span class="review-avatar">DC</span>
               <div>
                 <div class="review-name">Dr Azmain Chowdhury</div>
-                <div class="review-meta">Successful GP candidate</div>
+                <div class="review-meta">Successful MRCEM candidate</div>
               </div>
             </div>
 
             <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
             <p class="review-text">
-              "ReviseMSRA helped me lock in high-yield topics and stay consistent. The question bank felt closest to the exam."
+              "ReviseMRCEM helped me lock in high-yield topics and stay consistent. The question bank felt closest to the exam."
             </p>
             <a class="review-link" href="#">Read more</a>
           </article>
@@ -795,28 +1024,28 @@
     <section class="guest-plan">
       <div class="container guest-plan__grid">
         <div class="guest-plan__copy">
-          <h2 class="guest-h2 guest-h2--left">One membership, all resources</h2>
+          <h2 class="guest-h2 guest-h2--left">Two-stage membership pathway</h2>
           <p class="guest-plan__lead">
-            Everything unlocks the moment you subscribe. Get the full question bank, revision notes,
-            flashcards, and mock papers with a single plan.
+            Start with MRCEM Primary, then unlock Intermediate when you are ready for higher-level
+            emergency and specialty topics.
           </p>
           <ul class="guest-plan__list">
-            <li>Unlimited question practice with detailed explanations</li>
-            <li>High-yield revision notes and recall-focused flashcards</li>
-            <li>Mock papers designed to build exam stamina</li>
-            <li>Completion tracking to guide your daily study</li>
+            <li>MRCEM Primary covers core sciences and past recalls</li>
+            <li>MRCEM Intermediate focuses on specialty and emergency presentations</li>
+            <li>Separate MCQ banks and progress tracking for each exam</li>
+            <li>Upgrade to Intermediate after completing Primary</li>
           </ul>
         </div>
 
         <div class="plan-card">
-          <span class="plan-tag">Most popular</span>
-          <div class="plan-title">Full Access Membership</div>
-          <div class="plan-price">Flexible options for every timeline</div>
+          <span class="plan-tag">Start here</span>
+          <div class="plan-title">MRCEM Primary access</div>
+          <div class="plan-price">Choose a duration that matches your exam date</div>
           <div class="plan-divider"></div>
           <ul class="plan-list">
             <li>Instant access after checkout</li>
-            <li>All resources included</li>
-            <li>Track progress across topics</li>
+            <li>Primary MCQs, notes, and mock papers</li>
+            <li>Track progress across core topics</li>
           </ul>
           <a class="btn-primary" href="{{ route('register') }}">Start revising now</a>
           <div class="plan-trust">Secure checkout and instant access.</div>
@@ -826,8 +1055,8 @@
 
     <section class="guest-cta">
       <div class="container guest-cta__inner">
-        <h2 class="guest-cta__title">The MSRA is more competitive than ever...</h2>
-        <p class="guest-cta__sub">Secure your dream NHS training job with Revise MSRA.</p>
+        <h2 class="guest-cta__title">The MRCEM is more competitive than ever...</h2>
+        <p class="guest-cta__sub">Secure your dream NHS training job with Revise MRCEM.</p>
 
         <div class="guest-cta__actions">
           <a class="btn-primary btn-primary--dark" href="{{ route('register') }}">Don't miss out - Join today</a>

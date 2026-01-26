@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'REVISE MSRA • Reviews')
+@section('title', 'REVISE MRCEM • Reviews')
 
 @section('content')
   <main class="page reviews-page">
@@ -10,9 +10,9 @@
           <span class="reviews-search__icon" aria-hidden="true">🔍</span>
           <input type="text" placeholder="Search reviews by name or hospital..." />
         </div>
-        <h1 class="reviews-title">Revise MSRA Wall of Love</h1>
+        <h1 class="reviews-title">Revise MRCEM Wall of Love</h1>
         <p class="reviews-sub">
-          Real feedback from doctors who used Revise MSRA to secure their top choices.
+          Real feedback from doctors who used Revise MRCEM to secure their top choices.
         </p>
         <a class="reviews-cta" href="#">Share your review</a>
       </div>
@@ -26,12 +26,12 @@
               <div class="review-avatar">A</div>
               <div>
                 <div class="review-name">Dr A. Chowdhury</div>
-                <div class="review-meta">GP Training</div>
+                <div class="review-meta">Emergency Medicine Training</div>
               </div>
             </div>
             <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
             <p class="review-text">
-              The question bank felt closest to the real MSRA. I used the notes daily and jumped into mocks in week two.
+              The question bank felt closest to the real MRCEM. I used the notes daily and jumped into mocks in week two.
             </p>
           </article>
 
@@ -73,7 +73,7 @@
             </div>
             <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
             <p class="review-text">
-              I used only Revise MSRA and scored 606. The mini mocks were perfect for timed practice.
+              I used only Revise MRCEM and scored 606. The mini mocks were perfect for timed practice.
             </p>
           </article>
 
@@ -124,7 +124,7 @@
               <div class="review-avatar">T</div>
               <div>
                 <div class="review-name">Dr T. Ahmed</div>
-                <div class="review-meta">GP Applicant</div>
+                <div class="review-meta">MRCEM Candidate</div>
               </div>
             </div>
             <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
