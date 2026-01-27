@@ -12,7 +12,11 @@ class MockPaperQuestion extends Model
         'mock_paper_id',
         'topic',
         'stem',
+        'image',
+        'image_alt',
         'explanation',
+        'explanation_image',
+        'explanation_image_alt',
         'order',
     ];
 

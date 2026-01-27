@@ -184,6 +184,15 @@ class PageController extends Controller
                 $meta = is_array($question->meta) ? $question->meta : [];
                 $image = isset($meta['image']) && is_string($meta['image']) ? $meta['image'] : null;
                 $imageAlt = isset($meta['alt']) && is_string($meta['alt']) ? $meta['alt'] : 'Question image';
+                if (isset($meta['image_alt']) && is_string($meta['image_alt'])) {
+                    $imageAlt = $meta['image_alt'];
+                }
+                $explanationImage = isset($meta['explanation_image']) && is_string($meta['explanation_image'])
+                    ? $meta['explanation_image']
+                    : null;
+                $explanationAlt = isset($meta['explanation_image_alt']) && is_string($meta['explanation_image_alt'])
+                    ? $meta['explanation_image_alt']
+                    : 'Explanation image';
                 $options = $question->options->map(function ($option, $idx) {
                     return [
                         'id' => $option->id ?? $idx,
@@ -207,6 +216,8 @@ class PageController extends Controller
                     'match_options' => $matchOptions,
                     'image' => $image,
                     'image_alt' => $imageAlt,
+                    'explanation_image' => $explanationImage,
+                    'explanation_image_alt' => $explanationAlt,
                     'insight' => $question->explanation ?? 'Review this item to strengthen recall for the exam.',
                     'explanation' => $question->explanation,
                     'answer_text' => $question->answer_text,

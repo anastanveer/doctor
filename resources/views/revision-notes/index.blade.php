@@ -13,7 +13,7 @@
   <main class="page rn-page">
     <div class="container rn-wrap">
       <div class="rn-search">
-        <input type="text" placeholder="Start typing to find a revision note" />
+        <input type="text" placeholder="Start typing to find a revision note" aria-label="Search revision topics" />
       </div>
 
       @php
@@ -40,7 +40,7 @@
         ];
       @endphp
 
-      <section class="rn-grid">
+      <section class="rn-grid" data-rn-grid>
         @forelse ($topics as $topic)
           @php
             $icon = $iconMap[$topic->slug] ?? '&#x1F4D8;';
@@ -56,6 +56,44 @@
           </div>
         @endforelse
       </section>
+      @if ($topics->isNotEmpty())
+        <div class="rn-empty" data-rn-empty hidden>
+          <h3>No topics match your search</h3>
+          <p>Try a different keyword.</p>
+        </div>
+      @endif
     </div>
   </main>
 @endsection
+
+@push('scripts')
+  <script>
+    (function () {
+      const searchInput = document.querySelector('.rn-search input');
+      const tiles = [...document.querySelectorAll('[data-rn-grid] .rn-tile')];
+      const emptyState = document.querySelector('[data-rn-empty]');
+
+      if (!searchInput || !tiles.length) {
+        return;
+      }
+
+      const filterTiles = (term) => {
+        const value = (term || '').trim().toLowerCase();
+        let visibleCount = 0;
+        tiles.forEach((tile) => {
+          const label = (tile.textContent || '').toLowerCase();
+          const matches = !value || label.includes(value);
+          tile.hidden = !matches;
+          if (matches) visibleCount += 1;
+        });
+        if (emptyState) {
+          emptyState.hidden = visibleCount !== 0;
+        }
+      };
+
+      searchInput.addEventListener('input', (event) => {
+        filterTiles(event.target.value);
+      });
+    })();
+  </script>
+@endpush

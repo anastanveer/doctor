@@ -46,6 +46,9 @@
               <div class="mcq-answer__status" data-answer-status></div>
               <div class="mcq-answer__correct" data-answer-correct></div>
               <div class="mcq-answer__explanation" data-answer-explanation></div>
+              <div class="mcq-answer__media" data-answer-media hidden>
+                <img data-answer-image alt="" />
+              </div>
             </div>
             <div class="mcq-progress">
               <span data-progress-current></span>/<span data-progress-total></span>
@@ -129,6 +132,8 @@
     const answerStatus = mcqCard.querySelector('[data-answer-status]');
     const answerCorrect = mcqCard.querySelector('[data-answer-correct]');
     const answerExplanation = mcqCard.querySelector('[data-answer-explanation]');
+    const answerMedia = mcqCard.querySelector('[data-answer-media]');
+    const answerImage = mcqCard.querySelector('[data-answer-image]');
 
     const questions = @json($mcqQuestions);
     let currentIndex = 0;
@@ -536,6 +541,13 @@
       if (answerExplanation) {
         answerExplanation.textContent = '';
       }
+      if (answerMedia) {
+        answerMedia.hidden = true;
+      }
+      if (answerImage) {
+        answerImage.removeAttribute('src');
+        answerImage.removeAttribute('alt');
+      }
       if (submitButton) {
         submitButton.disabled = false;
         submitButton.textContent = 'Submit answer';
@@ -668,6 +680,17 @@
       if (answerExplanation) {
         const explanation = item.explanation || item.insight || '';
         answerExplanation.textContent = explanation;
+      }
+      if (answerMedia && answerImage) {
+        if (item.explanation_image) {
+          answerImage.src = item.explanation_image;
+          answerImage.alt = item.explanation_image_alt || 'Explanation image';
+          answerMedia.hidden = false;
+        } else {
+          answerMedia.hidden = true;
+          answerImage.removeAttribute('src');
+          answerImage.removeAttribute('alt');
+        }
       }
 
       if (answerPanel) {

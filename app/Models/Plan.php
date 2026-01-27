@@ -25,6 +25,8 @@ class Plan extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+        'duration_months' => 'integer',
+        'price_cents' => 'integer',
     ];
 
     public function examLabel(): string

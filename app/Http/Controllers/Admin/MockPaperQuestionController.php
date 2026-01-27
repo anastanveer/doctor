@@ -9,6 +9,7 @@ use App\Models\MockPaperQuestion;
 use App\Models\Topic;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class MockPaperQuestionController extends Controller
@@ -72,6 +73,7 @@ class MockPaperQuestionController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $this->validateQuestion($request);
+        $data = $this->applyImages($request, $data);
         $question = MockPaperQuestion::create($data);
 
         $this->syncOptions($question, $request->input('options', []), $request->input('correct_option'));
@@ -101,6 +103,7 @@ class MockPaperQuestionController extends Controller
     public function update(Request $request, MockPaperQuestion $mockQuestion): RedirectResponse
     {
         $data = $this->validateQuestion($request);
+        $data = $this->applyImages($request, $data, $mockQuestion);
         $mockQuestion->update($data);
 
         $mockQuestion->options()->delete();
@@ -125,6 +128,12 @@ class MockPaperQuestionController extends Controller
             'topic' => ['nullable', 'string', 'max:120'],
             'stem' => ['required', 'string'],
             'explanation' => ['nullable', 'string'],
+            'question_image' => ['nullable', 'image', 'max:5120'],
+            'question_image_alt' => ['nullable', 'string', 'max:160'],
+            'explanation_image' => ['nullable', 'image', 'max:5120'],
+            'explanation_image_alt' => ['nullable', 'string', 'max:160'],
+            'remove_question_image' => ['nullable', 'boolean'],
+            'remove_explanation_image' => ['nullable', 'boolean'],
             'order' => ['required', 'integer', 'min:1'],
         ]);
     }
@@ -156,5 +165,62 @@ class MockPaperQuestionController extends Controller
             Topic::EXAM_PRIMARY => 'MRCEM Primary',
             Topic::EXAM_INTERMEDIATE => 'MRCEM Intermediate',
         ];
+    }
+
+    private function applyImages(Request $request, array $data, ?MockPaperQuestion $question = null): array
+    {
+        if ($request->boolean('remove_question_image')) {
+            $this->deleteStoredImage($question?->image);
+            $data['image'] = null;
+            $data['image_alt'] = null;
+        }
+
+        if ($request->hasFile('question_image')) {
+            $this->deleteStoredImage($question?->image);
+            $path = $request->file('question_image')->store('mock-questions', 'public');
+            $data['image'] = Storage::url($path);
+        }
+
+        $questionAlt = trim((string) $request->input('question_image_alt', ''));
+        $data['image_alt'] = $questionAlt !== '' ? $questionAlt : null;
+
+        if ($request->boolean('remove_explanation_image')) {
+            $this->deleteStoredImage($question?->explanation_image);
+            $data['explanation_image'] = null;
+            $data['explanation_image_alt'] = null;
+        }
+
+        if ($request->hasFile('explanation_image')) {
+            $this->deleteStoredImage($question?->explanation_image);
+            $path = $request->file('explanation_image')->store('mock-questions', 'public');
+            $data['explanation_image'] = Storage::url($path);
+        }
+
+        $explanationAlt = trim((string) $request->input('explanation_image_alt', ''));
+        $data['explanation_image_alt'] = $explanationAlt !== '' ? $explanationAlt : null;
+
+        unset(
+            $data['question_image'],
+            $data['question_image_alt'],
+            $data['explanation_image'],
+            $data['explanation_image_alt'],
+            $data['remove_question_image'],
+            $data['remove_explanation_image']
+        );
+
+        return $data;
+    }
+
+    private function deleteStoredImage(?string $url): void
+    {
+        if (!$url || !is_string($url)) {
+            return;
+        }
+        if (str_starts_with($url, '/storage/')) {
+            $path = substr($url, strlen('/storage/'));
+            if ($path) {
+                Storage::disk('public')->delete($path);
+            }
+        }
     }
 }

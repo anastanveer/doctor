@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MockPaper;
+use App\Models\MockPaperProgress;
 use App\Models\MockPaperQuestion;
 use App\Models\Topic;
 use App\Models\User;
@@ -53,10 +54,14 @@ class MockPapersController extends Controller
         ]);
 
         $paperTopics = $mockPaper->questions->pluck('topic')->filter()->unique()->count();
+        $progress = MockPaperProgress::where('user_id', auth()->id())
+            ->where('mock_paper_id', $mockPaper->id)
+            ->first();
 
         return view('mock-papers.show', [
             'paper' => $mockPaper,
             'paperTopics' => $paperTopics,
+            'progress' => $progress,
         ]);
     }
 

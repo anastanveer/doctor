@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <form class="qb-card" method="post" action="{{ $question->exists ? route('admin.mock-questions.update', $question) : route('admin.mock-questions.store') }}">
+    <form class="qb-card" method="post" action="{{ $question->exists ? route('admin.mock-questions.update', $question) : route('admin.mock-questions.store') }}" enctype="multipart/form-data">
       @csrf
       @if ($question->exists)
         @method('put')
@@ -53,9 +53,39 @@
         <textarea name="stem" rows="4" style="border-radius:8px; border:1px solid var(--border); padding:12px;">{{ old('stem', $question->stem) }}</textarea>
 
         <label class="qb-radio" style="gap:6px;">
+          <span>Question image (optional)</span>
+        </label>
+        <input type="file" name="question_image" accept="image/*" />
+        @if (!empty($question->image))
+          <div style="display:flex; gap:12px; align-items:center;">
+            <img src="{{ $question->image }}" alt="{{ $question->image_alt ?? 'Question image' }}" style="width:140px; border-radius:10px; border:1px solid rgba(15,23,42,.12);" />
+            <label class="qb-radio" style="gap:6px;">
+              <input type="checkbox" name="remove_question_image" value="1" />
+              Remove image
+            </label>
+          </div>
+        @endif
+        <input name="question_image_alt" type="text" value="{{ old('question_image_alt', $question->image_alt ?? '') }}" placeholder="Question image alt text (optional)" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;" />
+
+        <label class="qb-radio" style="gap:6px;">
           <span>Explanation (optional)</span>
         </label>
         <textarea name="explanation" rows="3" style="border-radius:8px; border:1px solid var(--border); padding:12px;">{{ old('explanation', $question->explanation) }}</textarea>
+
+        <label class="qb-radio" style="gap:6px;">
+          <span>Explanation image (optional)</span>
+        </label>
+        <input type="file" name="explanation_image" accept="image/*" />
+        @if (!empty($question->explanation_image))
+          <div style="display:flex; gap:12px; align-items:center;">
+            <img src="{{ $question->explanation_image }}" alt="{{ $question->explanation_image_alt ?? 'Explanation image' }}" style="width:140px; border-radius:10px; border:1px solid rgba(15,23,42,.12);" />
+            <label class="qb-radio" style="gap:6px;">
+              <input type="checkbox" name="remove_explanation_image" value="1" />
+              Remove image
+            </label>
+          </div>
+        @endif
+        <input name="explanation_image_alt" type="text" value="{{ old('explanation_image_alt', $question->explanation_image_alt ?? '') }}" placeholder="Explanation image alt text (optional)" style="height:44px; border-radius:8px; border:1px solid var(--border); padding:0 12px;" />
       </div>
 
       <h3 style="margin:24px 0 12px;">Options</h3>

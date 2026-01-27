@@ -8,6 +8,7 @@ use App\Models\QuestionOption;
 use App\Models\Topic;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -61,6 +62,8 @@ class QuestionController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $this->validateQuestion($request);
+        $data['meta'] = $this->buildMeta($request);
+        $this->stripUploadFields($data);
         $question = Question::create($data);
 
         $this->syncOptions($question, $request->input('options', []));
@@ -92,6 +95,8 @@ class QuestionController extends Controller
     public function update(Request $request, Question $question): RedirectResponse
     {
         $data = $this->validateQuestion($request);
+        $data['meta'] = $this->buildMeta($request, $question);
+        $this->stripUploadFields($data);
         $question->update($data);
 
         $question->options()->delete();
@@ -118,6 +123,12 @@ class QuestionController extends Controller
             'difficulty' => ['nullable', 'string', 'max:50'],
             'stem' => ['required', 'string'],
             'explanation' => ['nullable', 'string'],
+            'question_image' => ['nullable', 'image', 'max:5120'],
+            'question_image_alt' => ['nullable', 'string', 'max:160'],
+            'explanation_image' => ['nullable', 'image', 'max:5120'],
+            'explanation_image_alt' => ['nullable', 'string', 'max:160'],
+            'remove_question_image' => ['nullable', 'boolean'],
+            'remove_explanation_image' => ['nullable', 'boolean'],
             'answer_text' => ['nullable', 'string'],
             'is_active' => ['nullable', 'boolean'],
             'shuffle_options' => ['nullable', 'boolean'],
@@ -134,6 +145,66 @@ class QuestionController extends Controller
         }
 
         return $data;
+    }
+
+    private function buildMeta(Request $request, ?Question $question = null): array
+    {
+        $meta = is_array($question?->meta) ? $question->meta : [];
+
+        if ($request->boolean('remove_question_image')) {
+            $this->deleteStoredImage($meta['image'] ?? null);
+            unset($meta['image'], $meta['image_alt']);
+        }
+
+        if ($request->hasFile('question_image')) {
+            $this->deleteStoredImage($meta['image'] ?? null);
+            $path = $request->file('question_image')->store('questions', 'public');
+            $meta['image'] = Storage::url($path);
+        }
+
+        $questionAlt = trim((string) $request->input('question_image_alt', ''));
+        $meta['image_alt'] = $questionAlt !== '' ? $questionAlt : null;
+
+        if ($request->boolean('remove_explanation_image')) {
+            $this->deleteStoredImage($meta['explanation_image'] ?? null);
+            unset($meta['explanation_image'], $meta['explanation_image_alt']);
+        }
+
+        if ($request->hasFile('explanation_image')) {
+            $this->deleteStoredImage($meta['explanation_image'] ?? null);
+            $path = $request->file('explanation_image')->store('questions', 'public');
+            $meta['explanation_image'] = Storage::url($path);
+        }
+
+        $explanationAlt = trim((string) $request->input('explanation_image_alt', ''));
+        $meta['explanation_image_alt'] = $explanationAlt !== '' ? $explanationAlt : null;
+
+        return $meta;
+    }
+
+    private function deleteStoredImage(?string $url): void
+    {
+        if (!$url || !is_string($url)) {
+            return;
+        }
+        if (str_starts_with($url, '/storage/')) {
+            $path = substr($url, strlen('/storage/'));
+            if ($path) {
+                Storage::disk('public')->delete($path);
+            }
+        }
+    }
+
+    private function stripUploadFields(array &$data): void
+    {
+        unset(
+            $data['question_image'],
+            $data['question_image_alt'],
+            $data['explanation_image'],
+            $data['explanation_image_alt'],
+            $data['remove_question_image'],
+            $data['remove_explanation_image']
+        );
     }
 
     private function syncOptions(Question $question, array $options): void

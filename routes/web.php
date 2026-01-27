@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\MockPapersController;
+use App\Http\Controllers\MockPaperProgressController;
 use App\Http\Controllers\McqAttemptController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PasswordController;
@@ -34,10 +35,16 @@ Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard'
 Route::get('/question-bank', [PageController::class, 'questionBank'])->name('question-bank')->middleware(['auth', 'subscribed']);
 Route::get('/revision-notes', [RevisionNotesController::class, 'index'])->name('revision-notes')->middleware(['auth', 'subscribed']);
 Route::get('/revision-notes/{topic:slug}', [RevisionNotesController::class, 'topic'])->name('revision-notes.topic')->middleware(['auth', 'subscribed']);
-Route::get('/revision-notes/{topic:slug}/{note:slug}', [RevisionNotesController::class, 'show'])->name('revision-notes.show')->middleware(['auth', 'subscribed']);
+Route::get('/revision-notes/{topic:slug}/{note:slug}', [RevisionNotesController::class, 'show'])
+    ->name('revision-notes.show')
+    ->middleware(['auth', 'subscribed'])
+    ->scopeBindings();
 Route::get('/flashcards', [PageController::class, 'flashcards'])->name('flashcards');
 Route::get('/mock-papers', [MockPapersController::class, 'index'])->name('mock-papers')->middleware(['auth', 'subscribed']);
 Route::get('/mock-papers/{mockPaper:slug}', [MockPapersController::class, 'show'])->name('mock-papers.show')->middleware(['auth', 'subscribed']);
+Route::post('/mock-papers/{mockPaper:slug}/progress', [MockPaperProgressController::class, 'store'])
+    ->name('mock-papers.progress')
+    ->middleware(['auth', 'subscribed']);
 Route::get('/account', [PageController::class, 'account'])->name('account')->middleware(['auth', 'subscribed']);
 Route::get('/support', [PageController::class, 'support'])->name('support')->middleware(['auth', 'subscribed']);
 Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');

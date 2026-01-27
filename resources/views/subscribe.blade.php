@@ -35,26 +35,30 @@
             @csrf
             <div class="reg-form-sub">Choose your plan</div>
 
-            @foreach ($plansByExam as $examType => $plans)
-              <div class="reg-form-sub" style="margin-top:12px;">
-                {{ $examTypes[$examType] ?? 'Exam package' }}
-              </div>
-              @foreach ($plans as $plan)
-                @php
-                  $isSelected = old('plan_id')
-                    ? (int) old('plan_id') === $plan->id
-                    : $plan->id === $defaultPlanId;
-                @endphp
-                <label class="plan {{ $isSelected ? 'is-selected' : '' }}" data-plan="{{ $plan->display_label }}" data-price="&pound;{{ $plan->price_gbp }}" data-perday="{{ $plan->per_day }}">
-                  <input type="radio" name="plan_id" value="{{ $plan->id }}" @checked($isSelected) />
-                  <div class="plan__text">
-                    {{ $plan->label }}
-                    <span class="plan__price">&pound;{{ $plan->price_gbp }}</span>
-                    <span class="plan__hint">Access for {{ $plan->duration_months }} month{{ $plan->duration_months > 1 ? 's' : '' }}</span>
+            <div class="plan-groups">
+              @foreach ($plansByExam as $examType => $plans)
+                <div class="plan-group">
+                  <div class="plan-group__title">
+                    {{ $examTypes[$examType] ?? 'Exam package' }}
                   </div>
-                </label>
+                  @foreach ($plans as $plan)
+                    @php
+                      $isSelected = old('plan_id')
+                        ? (int) old('plan_id') === $plan->id
+                        : $plan->id === $defaultPlanId;
+                    @endphp
+                    <label class="plan {{ $isSelected ? 'is-selected' : '' }}" data-plan="{{ $plan->display_label }}" data-price="&pound;{{ $plan->price_gbp }}" data-perday="{{ $plan->per_day }}">
+                      <input type="radio" name="plan_id" value="{{ $plan->id }}" @checked($isSelected) />
+                      <div class="plan__text">
+                        {{ $plan->label }}
+                        <span class="plan__price">&pound;{{ $plan->price_gbp }}</span>
+                        <span class="plan__hint">Access for {{ $plan->duration_months }} month{{ $plan->duration_months > 1 ? 's' : '' }}</span>
+                      </div>
+                    </label>
+                  @endforeach
+                </div>
               @endforeach
-            @endforeach
+            </div>
 
             @php
               $flatPlans = $plansByExam->flatten();

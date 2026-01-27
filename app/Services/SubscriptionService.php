@@ -78,7 +78,8 @@ class SubscriptionService
             $start = $active->expires_at->copy();
         }
 
-        $expires = $start->copy()->addMonths($plan->duration_months);
+        $months = max(1, (int) $plan->duration_months);
+        $expires = $start->copy()->addMonths($months);
 
         return [$start, $expires];
     }
