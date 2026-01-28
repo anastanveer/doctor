@@ -37,7 +37,7 @@
   .guest-hero__title{
     margin:0 0 18px;
     font-family:"acumin-pro-condensed", sans-serif;
-    font-size: 48px;
+    font-size: 56px;
     font-weight: 700;
     color:#f8f3ff;
     line-height:1.04;
@@ -54,7 +54,7 @@
     position:relative;
     padding-left: 30px;
     color: rgba(248,243,255,.8);
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.6;
   }
   .guest-hero__bullets li::before{
@@ -107,7 +107,7 @@
     flex-wrap:wrap;
   }
   .trust-pill{
-    font-size: 12px;
+    font-size: 13px;
     color: rgba(248,243,255,.8);
     padding: 7px 10px;
     border-radius: 999px;
@@ -151,7 +151,7 @@
   }
   .hero-card__top{ display:flex; gap:8px; margin-bottom: 10px; }
   .hero-tag{
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 900;
     padding: 6px 10px;
     border-radius: 999px;
@@ -165,12 +165,12 @@
   .hero-card__title{
     font-weight: 900;
     color:#f8f3ff;
-    font-size: 14px;
+    font-size: 15px;
   }
   .hero-card__text{
     margin: 6px 0 0;
     color: rgba(248,243,255,.78);
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.55;
   }
 
@@ -192,18 +192,18 @@
     color:#f8f3ff;
   }
   .hero-mini__tag{
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: .12em;
     text-transform: uppercase;
     color: rgba(248,243,255,.7);
   }
   .hero-mini__title{
     margin: 6px 0 4px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 800;
   }
   .hero-mini__price{
-    font-size: 12px;
+    font-size: 13px;
     color: rgba(248,243,255,.7);
   }
 
@@ -221,7 +221,7 @@
   }
   .package-lead{
     margin: 0;
-    font-size: 13px;
+    font-size: 14px;
     color: rgba(27,20,52,.68);
     max-width: 520px;
   }
@@ -240,7 +240,7 @@
   .package-tag{
     display:inline-flex;
     align-items:center;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 900;
     letter-spacing: .08em;
     text-transform: uppercase;
@@ -252,14 +252,14 @@
   }
   .package-title{
     margin: 12px 0 6px;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 900;
     color:#1b1434;
   }
   .package-sub{
     margin: 0 0 12px;
     color: rgba(27,20,52,.7);
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.6;
   }
   .package-list{
@@ -272,7 +272,7 @@
   .package-list li{
     position:relative;
     padding-left: 22px;
-    font-size: 12px;
+    font-size: 13px;
     color: rgba(27,20,52,.78);
   }
   .package-list li::before{
@@ -281,7 +281,7 @@
     left:0;
     top:1px;
     font-weight: 900;
-    font-size: 11px;
+    font-size: 12px;
     color:#5b45d4;
   }
   .package-row{
@@ -296,11 +296,11 @@
   }
   .package-row:last-child{ margin-bottom: 0; }
   .package-duration{
-    font-size: 12px;
+    font-size: 13px;
     color: rgba(27,20,52,.7);
   }
   .package-price{
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 800;
     color:#1b1434;
   }
@@ -313,7 +313,7 @@
     background:#5b45d4;
     color:#fff;
     text-decoration:none;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
   }
 
@@ -346,7 +346,7 @@
   }
   .guest-video__sub{
     margin-top: 6px;
-    font-size: 13px;
+    font-size: 14px;
     color: rgba(17,24,39,.62);
   }
 
@@ -355,7 +355,7 @@
   .guest-h2{
     margin: 0 0 16px;
     font-family:"acumin-pro-condensed", sans-serif;
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
     color:#111;
     text-align:center;
@@ -387,20 +387,20 @@
     border: 1px solid rgba(99,215,207,.35);
     font-weight: 900;
     color:#111;
-    font-size: 12px;
+    font-size: 13px;
   }
-  .review-name{ font-weight: 900; font-size: 12px; color:#111; }
-  .review-meta{ font-size: 11px; color: rgba(17,24,39,.55); }
+  .review-name{ font-weight: 900; font-size: 13px; color:#111; }
+  .review-meta{ font-size: 12px; color: rgba(17,24,39,.55); }
 
-  .review-stars{ color:#f4c54a; letter-spacing:1px; font-size: 13px; }
+  .review-stars{ color:#f4c54a; letter-spacing:1px; font-size: 14px; }
   .review-text{
     margin: 0 0 10px;
-    font-size: 12px;
+    font-size: 13px;
     color: rgba(17,24,39,.72);
     line-height: 1.6;
   }
   .review-link{
-    font-size: 12px;
+    font-size: 13px;
     color:#ff2d86;
     font-weight: 800;
     text-decoration: underline;
@@ -441,7 +441,7 @@
   .proof-value{
     margin-top: 10px;
     font-weight: 900;
-    font-size: 22px;
+    font-size: 24px;
     color:#111;
   }
   .count-up{
@@ -452,12 +452,12 @@
   .proof-label{
     margin-top: 6px;
     font-weight: 800;
-    font-size: 12px;
+    font-size: 13px;
     color:#111;
   }
   .proof-sub{
     margin-top: 6px;
-    font-size: 11px;
+    font-size: 12px;
     color: rgba(17,24,39,.60);
     line-height: 1.6;
   }
@@ -479,7 +479,7 @@
   }
   .guest-steps__sub{
     margin:0;
-    font-size: 13px;
+    font-size: 14px;
     color: rgba(17,24,39,.65);
     max-width: 420px;
   }
@@ -532,19 +532,19 @@
     background: rgba(15,23,42,.08);
     color:#111;
     font-weight: 900;
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: .08em;
     text-transform: uppercase;
   }
   .step-title{
     margin: 2px 0 0;
     font-weight: 900;
-    font-size: 13px;
+    font-size: 14px;
     color:#111;
   }
   .step-text{
     margin-top: 6px;
-    font-size: 12px;
+    font-size: 13px;
     color: rgba(17,24,39,.70);
     line-height: 1.6;
   }
@@ -562,7 +562,7 @@
   }
   .guest-plan__lead{
     margin: 0;
-    font-size: 13px;
+    font-size: 14px;
     color: rgba(17,24,39,.70);
     max-width: 520px;
   }
@@ -576,7 +576,7 @@
   .guest-plan__list li{
     position:relative;
     padding-left: 24px;
-    font-size: 13px;
+    font-size: 14px;
     color: rgba(17,24,39,.78);
     line-height: 1.6;
   }
@@ -592,7 +592,7 @@
     place-items:center;
     background: rgba(15,23,42,.08);
     font-weight: 900;
-    font-size: 10px;
+    font-size: 11px;
   }
   .plan-card{
     border-radius: 16px;
@@ -603,7 +603,7 @@
   }
   .plan-tag{
     display:inline-block;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 900;
     letter-spacing: .08em;
     text-transform: uppercase;
@@ -616,11 +616,11 @@
   .plan-title{
     margin: 10px 0 4px;
     font-weight: 900;
-    font-size: 16px;
+    font-size: 17px;
     color:#111;
   }
   .plan-price{
-    font-size: 13px;
+    font-size: 14px;
     color: rgba(17,24,39,.65);
   }
   .plan-divider{
@@ -638,7 +638,7 @@
   .plan-list li{
     position:relative;
     padding-left: 22px;
-    font-size: 12px;
+    font-size: 13px;
     color: rgba(17,24,39,.75);
   }
   .plan-list li::before{
@@ -647,12 +647,12 @@
     left:0;
     top:1px;
     font-weight: 900;
-    font-size: 11px;
+    font-size: 12px;
     color:#0b0b0c;
   }
   .plan-trust{
     margin-top: 10px;
-    font-size: 11px;
+    font-size: 12px;
     color: rgba(17,24,39,.55);
   }
 
@@ -665,14 +665,14 @@
   .guest-cta__title{
     margin: 0 0 6px;
     font-family:"acumin-pro-condensed", sans-serif;
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
     color:#f8f3ff;
   }
   .guest-cta__sub{
     margin: 0 0 12px;
     color: rgba(248,243,255,.75);
-    font-size: 13px;
+    font-size: 14px;
   }
   .guest-cta__actions{
     display:flex;
@@ -695,7 +695,7 @@
     .guest-hero__grid{ grid-template-columns: 1fr; }
     .review-grid{ grid-template-columns: 1fr; }
     .guest-video__player{ height: 240px; }
-    .guest-hero__title{ font-size: 36px; }
+    .guest-hero__title{ font-size: 40px; }
     .guest-hero__right{ order:-1; }
     .guest-proof__grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
     .guest-steps__head{ flex-direction: column; align-items:flex-start; }

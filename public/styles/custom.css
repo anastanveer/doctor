@@ -45,6 +45,7 @@ body{
   margin:0;
   color:var(--ink);
   background:var(--page);
+  font-size:15px;
 
   -webkit-font-smoothing:antialiased;
   text-rendering:geometricPrecision;
@@ -955,7 +956,7 @@ body{
 }
 .mcq-session__title{
   margin:4px 0 0;
-  font-size:32px;
+  font-size:34px;
   font-weight:900;
 }
 .mcq-session__meta{
@@ -967,7 +968,7 @@ body{
   background:#f5f5f5;
   padding:6px 14px;
   border-radius:999px;
-  font-size:12px;
+  font-size:13px;
   font-weight:700;
 }
 .meta-pill--accent{
@@ -1068,7 +1069,7 @@ body{
 }
 .mcq-session__question{
   margin:6px 0 0;
-  font-size:26px;
+  font-size:28px;
   line-height:1.4;
   font-weight:700;
   color:#111;
@@ -1302,7 +1303,7 @@ body{
   color:rgba(15,23,42,.6);
 }
 .mcq-answer__explanation{
-  font-size:14px;
+  font-size:15px;
   color:#0f172a;
   line-height:1.6;
 }
@@ -2461,14 +2462,14 @@ body{
 }
 .page-hero__title{
   margin:0;
-  font-size:32px;
+  font-size:36px;
   font-weight:900;
   letter-spacing:-.02em;
   color:#f8f7ff;
 }
 .page-hero__sub{
   margin:10px 0 0;
-  font-size:14px;
+  font-size:15px;
   color:rgba(248,247,255,.75);
   max-width:640px;
   line-height:1.6;
@@ -2511,13 +2512,13 @@ body{
 .qb-head{ margin-bottom:14px; }
 .qb-title{
   margin:0;
-  font-size:16px;
+  font-size:18px;
   font-weight:900;
   color:#111;
 }
 .qb-sub{
   margin:4px 0 0;
-  font-size:12px;
+  font-size:13px;
   color: rgba(17,24,39,.55);
 }
 
@@ -2760,7 +2761,7 @@ body{
 
 /* title */
 .rn-name{
-  font-size:14px;
+  font-size:15px;
   font-weight:700;
 }
 
@@ -2903,7 +2904,7 @@ body{
   color:#111;
 }
 .rn-article__body{
-  font-size:14px;
+  font-size:15px;
   color: rgba(17,24,39,.72);
   line-height:1.9;
 }
@@ -3450,7 +3451,7 @@ main{
 }
 .mock-mcq__title{
   margin:0;
-  font-size:18px;
+  font-size:20px;
   font-weight:800;
   color:#111;
 }
@@ -3461,7 +3462,7 @@ main{
   margin-top:8px;
 }
 .mock-mcq__tag{
-  font-size:11px;
+  font-size:12px;
   font-weight:800;
   text-transform:uppercase;
   letter-spacing:.08em;
@@ -3619,7 +3620,7 @@ main{
 }
 .mcq-question{
   margin:12px 0 0;
-  font-size:16px;
+  font-size:17px;
   font-weight:700;
   color:#0f172a;
   line-height:1.55;
@@ -3669,7 +3670,7 @@ main{
   color:#111;
 }
 .mcq-option__text{
-  font-size:14px;
+  font-size:15px;
   color:rgba(17,24,39,.8);
   line-height:1.55;
 }
@@ -4712,7 +4713,7 @@ main{
 .free-title{
   margin: 0 0 6px;
   font-family: "acumin-pro-condensed", sans-serif;
-  font-size: 34px;
+  font-size: 38px;
   font-weight: 700;
   color:#f8f7ff;
 }
@@ -4738,7 +4739,7 @@ main{
   grid-template-columns: .95fr 1.05fr;
 }
 .free-meta{
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   color: rgba(17,24,39,.60);
   letter-spacing: .08em;
@@ -4748,13 +4749,13 @@ main{
 .free-h2{
   margin: 0 0 8px;
   font-family: "acumin-pro-condensed", sans-serif;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   color:#111;
 }
 .free-text{
   margin: 0 0 12px;
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(17,24,39,.72);
   line-height: 1.7;
 }
@@ -4817,13 +4818,13 @@ main{
 .about-title{
   margin: 0 0 6px;
   font-family: "acumin-pro-condensed", sans-serif;
-  font-size: 34px;
+  font-size: 38px;
   font-weight: 700;
   color:#111;
 }
 .about-sub{
   margin: 0;
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(17,24,39,.70);
   max-width: 640px;
 }
@@ -4833,7 +4834,7 @@ main{
 }
 .about-copy p{
   margin: 0 0 12px;
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(17,24,39,.72);
   line-height: 1.7;
 }
@@ -4846,7 +4847,7 @@ main{
 }
 .about-quote__title{
   font-weight: 900;
-  font-size: 12px;
+  font-size: 13px;
   color:#111;
   margin-bottom: 10px;
 }
@@ -4854,11 +4855,11 @@ main{
   margin: 0 0 10px;
   padding-left: 18px;
   color: rgba(17,24,39,.72);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
 }
 .about-link{
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 900;
   color:var(--teal);
   text-decoration: underline;
@@ -4992,19 +4993,19 @@ main{
   width: 100%;
   border: 0;
   background: transparent;
-  font-size: 13px;
+  font-size: 14px;
   outline: none;
 }
 .reviews-title{
   margin: 0;
   font-family: "acumin-pro-condensed", sans-serif;
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 700;
   color:#111;
 }
 .reviews-sub{
   margin: 0;
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(17,24,39,.70);
 }
 .reviews-cta{
@@ -5057,11 +5058,11 @@ main{
 }
 .review-name{
   font-weight: 900;
-  font-size: 12px;
+  font-size: 13px;
   color:#111;
 }
 .review-meta{
-  font-size: 11px;
+  font-size: 12px;
   color: rgba(17,24,39,.60);
 }
 .review-stars{
@@ -5072,7 +5073,7 @@ main{
 }
 .review-text{
   margin: 0;
-  font-size: 12px;
+  font-size: 13px;
   color: rgba(17,24,39,.72);
   line-height: 1.6;
 }
@@ -5098,7 +5099,7 @@ main{
 @media (max-width: 720px){
   .reviews-columns{ column-count: 1; }
   .reviews-hero{ padding: 40px 0 34px; }
-  .reviews-title{ font-size: 26px; }
+  .reviews-title{ font-size: 28px; }
 }
 
 /* ===========================
@@ -5127,13 +5128,13 @@ main{
   background: rgba(99,215,207,.18);
   border: 1px solid rgba(99,215,207,.35);
   font-weight: 800;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: .02em;
 }
 .resources-hero__title{
   margin: 14px 0 10px;
   font-family: "acumin-pro-condensed", sans-serif;
-  font-size: 44px;
+  font-size: 48px;
   font-weight: 700;
   color:#111;
   line-height:1.05;
@@ -5141,7 +5142,7 @@ main{
 .resources-hero__sub{
   margin: 0 0 12px;
   color: rgba(17,24,39,.75);
-  font-size: 14px;
+  font-size: 15px;
   max-width: 560px;
 }
 .resources-hero__bullets{
@@ -5154,7 +5155,7 @@ main{
 .resources-hero__bullets li{
   position:relative;
   padding-left: 26px;
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(17,24,39,.78);
 }
 .resources-hero__bullets li::before{
@@ -5198,7 +5199,7 @@ main{
 }
 .resources-hero__badge{
   display:inline-block;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 900;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -5209,18 +5210,18 @@ main{
 .resources-hero__card-title{
   margin: 12px 0 6px;
   font-weight: 900;
-  font-size: 18px;
+  font-size: 20px;
   color:#111;
 }
 .resources-hero__card-sub{
   margin: 0 0 12px;
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(17,24,39,.70);
 }
 .resources-hero__list{
   display:grid;
   gap:8px;
-  font-size: 12px;
+  font-size: 13px;
   color: rgba(17,24,39,.70);
 }
 .resources-hero__list span{
@@ -5237,7 +5238,7 @@ main{
   place-items:center;
   background: rgba(99,215,207,.16);
   font-weight: 900;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .resources-grid{
@@ -5247,7 +5248,7 @@ main{
 .resources-h2{
   margin: 0 0 16px;
   font-family: "acumin-pro-condensed", sans-serif;
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 700;
   color:#111;
 }
@@ -5269,7 +5270,7 @@ main{
 }
 .resource-tag{
   display:inline-block;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 900;
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -5280,12 +5281,12 @@ main{
 .resource-title{
   margin: 10px 0 6px;
   font-weight: 900;
-  font-size: 16px;
+  font-size: 17px;
   color:#111;
 }
 .resource-text{
   margin: 0 0 10px;
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(17,24,39,.70);
 }
 .resource-list{
@@ -5294,7 +5295,7 @@ main{
   margin: 0 0 12px;
   display:grid;
   gap:8px;
-  font-size: 12px;
+  font-size: 13px;
   color: rgba(17,24,39,.70);
 }
 .resource-list li{
@@ -5313,14 +5314,14 @@ main{
   place-items:center;
   background: rgba(99,215,207,.2);
   font-weight: 900;
-  font-size: 10px;
+  font-size: 11px;
 }
 .resource-link{
   display:inline-flex;
   align-items:center;
   gap:8px;
   font-weight: 900;
-  font-size: 12px;
+  font-size: 13px;
   color:var(--teal);
   text-decoration: underline;
 }
@@ -5339,7 +5340,7 @@ main{
 .resources-steps__sub{
   margin:0;
   color: rgba(17,24,39,.65);
-  font-size: 13px;
+  font-size: 14px;
 }
 .resources-steps__grid{
   display:grid;
@@ -5358,7 +5359,7 @@ main{
   background: rgba(99,215,207,.10);
 }
 .resources-step__num{
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 900;
   letter-spacing: .18em;
   color: rgba(17,24,39,.55);
@@ -5366,12 +5367,12 @@ main{
 .resources-step__title{
   margin: 10px 0 6px;
   font-weight: 900;
-  font-size: 14px;
+  font-size: 15px;
   color:#111;
 }
 .resources-step__text{
   margin: 0;
-  font-size: 12px;
+  font-size: 13px;
   color: rgba(17,24,39,.70);
 }
 
@@ -5388,7 +5389,7 @@ main{
 .resources-cta__title{
   margin: 0 0 6px;
   font-family: "acumin-pro-condensed", sans-serif;
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 700;
   color:#111;
 }
@@ -5409,5 +5410,5 @@ main{
   .resources-steps__head{ flex-direction: column; align-items:flex-start; }
   .resources-steps__grid{ grid-template-columns: 1fr; }
   .resources-cta__inner{ flex-direction: column; align-items:flex-start; }
-  .resources-hero__title{ font-size: 36px; }
+  .resources-hero__title{ font-size: 40px; }
 }
