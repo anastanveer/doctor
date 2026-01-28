@@ -29,8 +29,23 @@ class RevisionNote extends Model
     {
         $field = $field ?? $this->getRouteKeyName();
 
-        return $this->where($field, $value)
-            ->orWhere('id', $value)
-            ->firstOrFail();
+        $query = $this->newQuery();
+        $topic = request()->route('topic');
+        if ($topic) {
+            $topicId = $topic instanceof RevisionTopic
+                ? $topic->id
+                : RevisionTopic::query()
+                    ->where('slug', $topic)
+                    ->orWhere('id', $topic)
+                    ->value('id');
+            if ($topicId) {
+                $query->where('revision_topic_id', $topicId);
+            }
+        }
+
+        return $query->where(function ($subquery) use ($field, $value) {
+            $subquery->where($field, $value)
+                ->orWhere('id', $value);
+        })->firstOrFail();
     }
 }
