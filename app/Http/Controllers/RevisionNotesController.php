@@ -26,18 +26,23 @@ class RevisionNotesController extends Controller
         return view('revision-notes.topic', compact('topic', 'notes'));
     }
 
-    public function show(RevisionTopic $topic, RevisionNote $note): View
+    public function show(RevisionTopic $topic, string $note): View
     {
-        if ($note->revision_topic_id !== $topic->id) {
-            abort(404);
-        }
+        $noteModel = $topic->notes()
+            ->where('slug', $note)
+            ->orWhere('id', $note)
+            ->firstOrFail();
 
         $related = $topic->notes()
-            ->where('id', '!=', $note->id)
+            ->where('id', '!=', $noteModel->id)
             ->orderBy('title')
             ->limit(6)
             ->get();
 
-        return view('revision-notes.show', compact('topic', 'note', 'related'));
+        return view('revision-notes.show', [
+            'topic' => $topic,
+            'note' => $noteModel,
+            'related' => $related,
+        ]);
     }
 }
