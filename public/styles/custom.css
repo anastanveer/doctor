@@ -2940,6 +2940,9 @@ body{
   background:#fff;
   padding: 22px;
   grid-column: 1 / -1;
+  width: min(980px, 100%);
+  margin: 12px auto 0;
+  text-align:center;
 }
 .rn-empty h3{
   margin:0 0 6px;
