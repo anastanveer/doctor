@@ -45,6 +45,28 @@
           <button class="btn-primary-dark btn-start" type="button">Start session</button>
           <button class="btn-outline btn-reset" type="button">Reset selection</button>
         </div>
+
+        @if (!empty($searchTerm))
+          <div class="qb-search-results">
+            <h3>Search results for "{{ $searchTerm }}"</h3>
+            @if ($searchResults->isEmpty())
+              <p class="qb-search-empty">No questions or explanations match this keyword.</p>
+            @else
+              <ul class="qb-result-list">
+                @foreach ($searchResults as $result)
+                  <li class="qb-result">
+                    <div class="qb-result__topic">{{ $result->topic?->name ?? 'General' }}</div>
+                    <div class="qb-result__question">{{ $result->stem }}</div>
+                    <div class="qb-result__excerpt">
+                      {{ \Illuminate\Support\Str::limit($result->explanation ?: $result->answer_text ?: 'No explanation available yet.', 140) }}
+                    </div>
+                  </li>
+                @endforeach
+              </ul>
+            @endif
+            <p class="qb-search-note">Tip: click “Start session” to practise the matching results.</p>
+          </div>
+        @endif
       </section>
 
       <aside class="qb-aside">
@@ -86,6 +108,7 @@
     const selectedTopics = new Set();
     const searchInput = document.querySelector('.header-search__input');
     const emptyState = document.querySelector('[data-topic-empty]');
+    const serverFiltered = Boolean(document.querySelector('.qb-search-results'));
 
     const setChipState = (chip, isSelected) => {
       chip.classList.toggle('is-selected', isSelected);
@@ -94,6 +117,16 @@
 
     const filterChips = (term) => {
       const value = (term || '').trim().toLowerCase();
+      if (serverFiltered && value === initialQuery.toLowerCase()) {
+        chips.forEach((chip) => {
+          chip.hidden = false;
+          chip.classList.remove('is-match');
+        });
+        if (emptyState) {
+          emptyState.hidden = chips.length !== 0;
+        }
+        return;
+      }
       let visibleCount = 0;
       chips.forEach((chip) => {
         const label = (chip.dataset.topic || '').toLowerCase();
@@ -193,6 +226,10 @@
       const url = new URL("{{ route('mcq-session') }}", window.location.origin);
       if (selectedTopics.size && selectedTopics.size < chips.length) {
         selectedTopics.forEach((topic) => url.searchParams.append('topics[]', topic));
+      }
+      const query = searchInput?.value?.trim();
+      if (query) {
+        url.searchParams.set('q', query);
       }
       window.location.href = url.toString();
     });

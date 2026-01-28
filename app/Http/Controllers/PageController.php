@@ -8,6 +8,7 @@ use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class PageController extends Controller
@@ -49,9 +50,27 @@ class PageController extends Controller
     {
         $examType = $this->resolveExamType(auth()->user());
         $examLabel = $this->examLabel($examType);
-        $topics = Topic::where('exam_type', $examType)
-            ->orderBy('name')
-            ->pluck('name');
+        $searchTerm = trim((string) request()->input('q', ''));
+        $topicsQuery = Topic::where('exam_type', $examType)
+            ->orderBy('name');
+
+        if ($searchTerm !== '') {
+            $topicsQuery->where(function ($query) use ($searchTerm, $examType) {
+                $query->where('name', 'like', "%{$searchTerm}%")
+                    ->orWhereHas('questions', function ($subquery) use ($searchTerm, $examType) {
+                        $subquery->where('is_active', true)
+                            ->where('exam_type', $examType)
+                            ->where(function ($inner) use ($searchTerm) {
+                                $inner->where('stem', 'like', "%{$searchTerm}%")
+                                    ->orWhere('explanation', 'like', "%{$searchTerm}%")
+                                    ->orWhere('answer_text', 'like', "%{$searchTerm}%")
+                                    ->orWhereHas('options', fn ($opt) => $opt->where('text', 'like', "%{$searchTerm}%"));
+                            });
+                    });
+            });
+        }
+
+        $topics = $topicsQuery->pluck('name');
         $totalQuestions = Question::where('is_active', true)
             ->where('exam_type', $examType)
             ->where(function ($query) {
@@ -69,11 +88,29 @@ class PageController extends Controller
             ->where('exam_type', $examType)
             ->count();
 
+        $searchResults = collect();
+        if ($searchTerm !== '') {
+            $searchResults = Question::with('topic')
+                ->where('is_active', true)
+                ->where('exam_type', $examType)
+                ->where(function ($query) use ($searchTerm) {
+                    $query->where('stem', 'like', "%{$searchTerm}%")
+                        ->orWhere('explanation', 'like', "%{$searchTerm}%")
+                        ->orWhere('answer_text', 'like', "%{$searchTerm}%")
+                        ->orWhereHas('options', fn ($opt) => $opt->where('text', 'like', "%{$searchTerm}%"));
+                })
+                ->orderBy('id')
+                ->limit(12)
+                ->get();
+        }
+
         return view('question-bank', [
             'topics' => $topics,
             'examLabel' => $examLabel,
             'totalQuestions' => $totalQuestions,
             'totalTopics' => $totalTopics,
+            'searchTerm' => $searchTerm,
+            'searchResults' => $searchResults,
         ]);
     }
 
@@ -153,6 +190,7 @@ class PageController extends Controller
         $examType = $this->resolveExamType(auth()->user());
         $examLabel = $this->examLabel($examType);
         $topicNames = request()->input('topics', []);
+        $searchTerm = trim((string) request()->input('q', ''));
         if (!is_array($topicNames)) {
             $topicNames = [$topicNames];
         }
@@ -174,6 +212,14 @@ class PageController extends Controller
         if (!empty($topicNames)) {
             $query->whereHas('topic', function ($subquery) use ($topicNames) {
                 $subquery->whereIn('name', $topicNames);
+            });
+        }
+        if ($searchTerm !== '') {
+            $query->where(function ($subquery) use ($searchTerm) {
+                $subquery->where('stem', 'like', "%{$searchTerm}%")
+                    ->orWhere('explanation', 'like', "%{$searchTerm}%")
+                    ->orWhere('answer_text', 'like', "%{$searchTerm}%")
+                    ->orWhereHas('options', fn ($opt) => $opt->where('text', 'like', "%{$searchTerm}%"));
             });
         }
 
@@ -214,9 +260,9 @@ class PageController extends Controller
                     'question' => $question->stem,
                     'options' => $options,
                     'match_options' => $matchOptions,
-                    'image' => $image,
+                    'image' => $this->normalizeMedia($image),
                     'image_alt' => $imageAlt,
-                    'explanation_image' => $explanationImage,
+                    'explanation_image' => $this->normalizeMedia($explanationImage),
                     'explanation_image_alt' => $explanationAlt,
                     'insight' => $question->explanation ?? 'Review this item to strengthen recall for the exam.',
                     'explanation' => $question->explanation,
@@ -353,6 +399,18 @@ class PageController extends Controller
         }
 
         return [$current, $record];
+    }
+
+    private function normalizeMedia(?string $path): ?string
+    {
+        if (!$path || !is_string($path)) {
+            return null;
+        }
+        if (str_starts_with($path, 'http') || str_starts_with($path, '/')) {
+            return $path;
+        }
+
+        return Storage::url($path);
     }
 
     private function daysUntilExam(User $user): int

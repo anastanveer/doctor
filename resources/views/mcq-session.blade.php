@@ -73,8 +73,11 @@
           <p>Answer reveals unlock after submission.</p>
           <p>Shortcuts: 1-4 choose an option, F flags/unflags, Space pauses the timer.</p>
         </div>
-        <button class="btn-primary-dark" type="button" id="mcq-submit">Submit answer</button>
-        <button class="btn-outline" type="button" id="mcq-next" hidden disabled>Next question</button>
+        <div class="mcq-session__actions">
+          <button class="btn-outline" type="button" id="mcq-prev">Previous question</button>
+          <button class="btn-primary-dark" type="button" id="mcq-submit">Submit answer</button>
+          <button class="btn-outline" type="button" id="mcq-next">Next question</button>
+        </div>
       </section>
 
       <section class="mcq-complete" id="mcq-complete" hidden>
@@ -123,6 +126,7 @@
     const progressPill = document.querySelector('[data-progress-pill]');
     const timerPill = document.querySelector('[data-timer-pill]');
     const submitButton = document.getElementById('mcq-submit');
+    const prevButton = document.getElementById('mcq-prev');
     const nextButton = document.getElementById('mcq-next');
     const completePanel = document.getElementById('mcq-complete');
     const sessionLayout = document.querySelector('.mcq-session__layout');
@@ -143,6 +147,11 @@
     let isPaused = false;
     let hasSubmitted = false;
     let questionStart = Date.now();
+    const questionStates = questions.map(() => ({
+      submitted: false,
+      payload: null,
+      draft: null,
+    }));
 
     const formatTime = (seconds) => {
       const mins = Math.floor(seconds / 60);
@@ -335,6 +344,7 @@
       flagBtn.setAttribute('aria-pressed', flagged.has(index) ? 'true' : 'false');
       flagBtn.classList.toggle('is-flagged', flagged.has(index));
       resetAnswerState();
+      applyQuestionState(index);
     };
 
     const completeSession = () => {
@@ -367,6 +377,15 @@
         updateFlaggedList();
       } else {
         completeSession();
+      }
+    };
+
+    const moveToPrevQuestion = () => {
+      const prevIndex = currentIndex - 1;
+      if (prevIndex >= 0) {
+        currentIndex = prevIndex;
+        renderQuestion(currentIndex);
+        updateFlaggedList();
       }
     };
 
@@ -501,21 +520,27 @@
           body: JSON.stringify(payload),
         }).catch(() => {});
       }
+      questionStates[currentIndex].submitted = true;
+      questionStates[currentIndex].payload = payload;
+      questionStates[currentIndex].draft = null;
       revealAnswer(item, payload);
     });
 
     nextButton?.addEventListener('click', () => {
-      if (!hasSubmitted) {
-        return;
-      }
+      saveDraftState();
       moveToNextQuestion();
+    });
+
+    prevButton?.addEventListener('click', () => {
+      saveDraftState();
+      moveToPrevQuestion();
     });
 
     function resetAnswerState() {
       hasSubmitted = false;
       optionContainer.classList.remove('is-locked');
       optionContainer.querySelectorAll('button').forEach((button) => {
-        button.classList.remove('is-correct', 'is-wrong');
+        button.classList.remove('is-active', 'is-correct', 'is-wrong');
         button.disabled = false;
       });
       optionContainer.querySelectorAll('select').forEach((select) => {
@@ -552,10 +577,7 @@
         submitButton.disabled = false;
         submitButton.textContent = 'Submit answer';
       }
-      if (nextButton) {
-        nextButton.disabled = true;
-        nextButton.hidden = true;
-      }
+      updateNavButtons();
     }
 
     function setAnswerStatus(label, tone) {
@@ -664,17 +686,19 @@
         addAnswerList('Suggested answer', answerText ? [answerText] : [], false);
       } else {
         const selectedId = payload.selected_option_id;
-        isCorrect = correctIds.length > 0 && correctIds.includes(selectedId);
+        const primaryCorrectId = correctIds.length ? correctIds[0] : null;
+        isCorrect = primaryCorrectId !== null && selectedId === primaryCorrectId;
         optionContainer.querySelectorAll('button').forEach((button) => {
           const id = Number(button.dataset.optionId);
-          if (correctIds.includes(id)) {
+          if (primaryCorrectId !== null && id === primaryCorrectId) {
             button.classList.add('is-correct');
           } else if (id === selectedId) {
             button.classList.add('is-wrong');
           }
           button.disabled = true;
         });
-        addAnswerList('Correct answer', correctOptions.map((option) => option.text), false);
+        const primaryCorrectText = correctOptions.length ? [correctOptions[0].text] : [];
+        addAnswerList('Correct answer', primaryCorrectText, false);
       }
 
       if (answerExplanation) {
@@ -708,9 +732,120 @@
       if (submitButton) {
         submitButton.disabled = true;
       }
+      updateNavButtons();
+    }
+
+    function updateNavButtons() {
+      if (prevButton) {
+        prevButton.disabled = currentIndex === 0;
+      }
       if (nextButton) {
-        nextButton.disabled = false;
-        nextButton.hidden = false;
+        nextButton.textContent = currentIndex >= questions.length - 1 ? 'Finish session' : 'Next question';
+      }
+    }
+
+    function saveDraftState() {
+      const item = questions[currentIndex];
+      if (!item || questionStates[currentIndex].submitted) {
+        return;
+      }
+      questionStates[currentIndex].draft = readDraftState(item);
+    }
+
+    function readDraftState(item) {
+      const type = item.type || 'single';
+      if (type === 'multiple') {
+        const selected = [...optionContainer.querySelectorAll('button.is-active')]
+          .map((button) => Number(button.dataset.optionId))
+          .filter((id) => Number.isFinite(id));
+        return selected.length ? { selected_option_ids: selected } : null;
+      }
+      if (type === 'ordering') {
+        const ordering = [...optionContainer.querySelectorAll('.order-item')]
+          .map((row) => Number(row.dataset.optionId))
+          .filter((id) => Number.isFinite(id));
+        return ordering.length ? { ordering } : null;
+      }
+      if (type === 'match') {
+        const selects = [...optionContainer.querySelectorAll('select[data-option-id]')];
+        if (!selects.length) return null;
+        const matches = {};
+        let hasValue = false;
+        selects.forEach((select) => {
+          matches[select.dataset.optionId] = select.value || '';
+          if (select.value) hasValue = true;
+        });
+        return hasValue ? { matches } : null;
+      }
+      if (type === 'short_answer') {
+        const input = optionContainer.querySelector('.short-input');
+        const value = input ? input.value.trim() : '';
+        return value ? { short_answer: value } : null;
+      }
+      const selectedButton = optionContainer.querySelector('button.is-active');
+      if (!selectedButton) return null;
+      return { selected_option_id: Number(selectedButton.dataset.optionId) };
+    }
+
+    function applyQuestionState(index) {
+      const item = questions[index];
+      const state = questionStates[index];
+      if (!item || !state) {
+        updateNavButtons();
+        return;
+      }
+      if (state.submitted && state.payload) {
+        revealAnswer(item, state.payload);
+        return;
+      }
+      if (state.draft) {
+        applyDraftState(item, state.draft);
+      }
+      updateNavButtons();
+    }
+
+    function applyDraftState(item, draft) {
+      const type = item.type || 'single';
+      if (!draft) return;
+      if (type === 'multiple' && Array.isArray(draft.selected_option_ids)) {
+        optionContainer.querySelectorAll('button').forEach((button) => {
+          const id = Number(button.dataset.optionId);
+          button.classList.toggle('is-active', draft.selected_option_ids.includes(id));
+        });
+        return;
+      }
+      if (type === 'ordering' && Array.isArray(draft.ordering)) {
+        const list = optionContainer.querySelector('.order-list');
+        if (list) {
+          const rows = [...list.querySelectorAll('.order-item')];
+          const byId = new Map(rows.map((row) => [Number(row.dataset.optionId), row]));
+          list.innerHTML = '';
+          draft.ordering.forEach((id) => {
+            const row = byId.get(Number(id));
+            if (row) list.appendChild(row);
+          });
+          rows.forEach((row) => {
+            if (!list.contains(row)) list.appendChild(row);
+          });
+        }
+        return;
+      }
+      if (type === 'match' && draft.matches && typeof draft.matches === 'object') {
+        optionContainer.querySelectorAll('select[data-option-id]').forEach((select) => {
+          const value = draft.matches[select.dataset.optionId];
+          select.value = value || '';
+        });
+        return;
+      }
+      if (type === 'short_answer' && typeof draft.short_answer === 'string') {
+        const input = optionContainer.querySelector('.short-input');
+        if (input) input.value = draft.short_answer;
+        return;
+      }
+      if (draft.selected_option_id !== undefined) {
+        optionContainer.querySelectorAll('button').forEach((button) => {
+          button.classList.toggle('is-active', Number(button.dataset.optionId) === Number(draft.selected_option_id));
+        });
       }
     }
   </script>

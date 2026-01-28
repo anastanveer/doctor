@@ -8,7 +8,7 @@
       <div class="rn-breadcrumb">
         <a href="{{ route('revision-notes') }}">Revision notes</a>
         <span>/</span>
-        <a href="{{ route('revision-notes.topic', $topic) }}">{{ $topic->name }}</a>
+        <a href="{{ route('revision-notes.topic', $topic->slug ?: $topic->id) }}">{{ $topic->name }}</a>
         <span>/</span>
         <span>{{ $note->title }}</span>
       </div>
@@ -32,7 +32,7 @@
           <ul>
             @foreach ($related as $item)
               <li>
-                <a href="{{ route('revision-notes.show', [$topic, $item]) }}">{{ $item->title }}</a>
+                <a href="{{ route('revision-notes.show', [$topic->slug ?: $topic->id, $item->slug ?: $item->id]) }}">{{ $item->title }}</a>
               </li>
             @endforeach
           </ul>

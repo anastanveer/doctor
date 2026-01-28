@@ -63,6 +63,14 @@
             @foreach ($paper->questions as $index => $question)
               @php
                 $options = $question->options->values();
+                $imageUrl = $question->image;
+                if ($imageUrl && !\Illuminate\Support\Str::startsWith($imageUrl, ['http', '/'])) {
+                  $imageUrl = \Illuminate\Support\Facades\Storage::url($imageUrl);
+                }
+                $explanationImageUrl = $question->explanation_image;
+                if ($explanationImageUrl && !\Illuminate\Support\Str::startsWith($explanationImageUrl, ['http', '/'])) {
+                  $explanationImageUrl = \Illuminate\Support\Facades\Storage::url($explanationImageUrl);
+                }
               @endphp
               <article class="mcq-card" data-question="{{ $index }}">
                 <div class="mcq-card__top">
@@ -72,9 +80,9 @@
                   </div>
                 </div>
                 <h4 class="mcq-question">{{ $question->stem }}</h4>
-                @if (!empty($question->image))
+                @if (!empty($imageUrl))
                   <div class="mcq-media">
-                    <img src="{{ $question->image }}" alt="{{ $question->image_alt ?? 'Question image' }}" />
+                    <img src="{{ $imageUrl }}" alt="{{ $question->image_alt ?? 'Question image' }}" />
                   </div>
                 @endif
                 <div class="mcq-options">
@@ -99,7 +107,7 @@
                 <span
                   class="mcq-explanation"
                   data-explanation="{{ e($question->explanation) }}"
-                  data-explanation-image="{{ $question->explanation_image }}"
+                  data-explanation-image="{{ $explanationImageUrl }}"
                   data-explanation-alt="{{ $question->explanation_image_alt }}"
                 ></span>
               </article>
@@ -312,13 +320,14 @@
       if (!answerState.submitted) return;
 
       const selectedButton = card.querySelector(`.mcq-option[data-option="${answerState.selected}"]`);
-      const options = card.querySelectorAll('.mcq-option');
+      const options = [...card.querySelectorAll('.mcq-option')];
+      const correctButton = options.find((btn) => btn.dataset.correct === '1');
       options.forEach((btn) => {
-        const isCorrect = btn.dataset.correct === '1';
-        btn.classList.toggle('is-correct', isCorrect);
-        btn.classList.toggle('is-wrong', btn === selectedButton && !isCorrect);
+        const isPrimaryCorrect = correctButton && btn === correctButton;
+        btn.classList.toggle('is-correct', isPrimaryCorrect);
+        btn.classList.toggle('is-wrong', btn === selectedButton && !isPrimaryCorrect);
       });
-      answerState.correct = selectedButton?.dataset.correct === '1';
+      answerState.correct = correctButton ? selectedButton === correctButton : false;
 
       if (status) {
         status.textContent = answerState.correct ? 'Correct' : 'Incorrect';
@@ -464,14 +473,14 @@
 
           const selectedButton = card.querySelector(`.mcq-option[data-option="${answerState.selected}"]`);
           answerState.submitted = true;
-          answerState.correct = selectedButton?.dataset.correct === '1';
-
-          const options = card.querySelectorAll('.mcq-option');
+          const options = [...card.querySelectorAll('.mcq-option')];
+          const correctButton = options.find((btn) => btn.dataset.correct === '1');
           options.forEach((btn) => {
-            const isCorrect = btn.dataset.correct === '1';
-            btn.classList.toggle('is-correct', isCorrect);
-            btn.classList.toggle('is-wrong', btn === selectedButton && !isCorrect);
+            const isPrimaryCorrect = correctButton && btn === correctButton;
+            btn.classList.toggle('is-correct', isPrimaryCorrect);
+            btn.classList.toggle('is-wrong', btn === selectedButton && !isPrimaryCorrect);
           });
+          answerState.correct = correctButton ? selectedButton === correctButton : false;
 
           const status = card.querySelector('.mcq-status');
           status.textContent = answerState.correct ? 'Correct' : 'Incorrect';

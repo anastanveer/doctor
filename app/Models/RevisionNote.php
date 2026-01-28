@@ -24,4 +24,13 @@ class RevisionNote extends Model
     {
         return 'slug';
     }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        $field = $field ?? $this->getRouteKeyName();
+
+        return $this->where($field, $value)
+            ->orWhere('id', $value)
+            ->firstOrFail();
+    }
 }

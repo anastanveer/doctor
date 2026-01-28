@@ -210,16 +210,29 @@ class QuestionController extends Controller
     private function syncOptions(Question $question, array $options): void
     {
         $order = 1;
+        $singleCorrect = in_array($question->type, ['single', 'true_false'], true);
+        $allowMultiple = $question->type === 'multiple';
+        $correctAssigned = false;
         foreach ($options as $option) {
             $text = trim((string) ($option['text'] ?? ''));
             if ($text === '') {
                 continue;
             }
 
+            $isCorrect = isset($option['is_correct']);
+            if ($singleCorrect) {
+                $isCorrect = $isCorrect && !$correctAssigned;
+                if ($isCorrect) {
+                    $correctAssigned = true;
+                }
+            } elseif (!$allowMultiple) {
+                $isCorrect = false;
+            }
+
             QuestionOption::create([
                 'question_id' => $question->id,
                 'text' => $text,
-                'is_correct' => isset($option['is_correct']),
+                'is_correct' => $isCorrect,
                 'order' => $option['order'] ?? $order,
                 'match_key' => $option['match_key'] ?? null,
                 'correct_order' => $option['correct_order'] ?? null,

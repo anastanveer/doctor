@@ -149,6 +149,7 @@
     const addOption = document.getElementById('add-option');
     const examSelect = document.getElementById('exam-type');
     const topicSelect = document.getElementById('topic-select');
+    const typeSelect = document.getElementById('question-type');
 
     const syncTopics = () => {
       if (!examSelect || !topicSelect) return;
@@ -213,6 +214,25 @@
       syncTopics();
     }
 
+    const enforceSingleCorrect = () => {
+      if (!typeSelect) return;
+      const isSingle = ['single', 'true_false'].includes(typeSelect.value);
+      if (!isSingle) return;
+      let seen = false;
+      optionsList.querySelectorAll('input[type="checkbox"][name*="[is_correct]"]').forEach((input) => {
+        if (input.checked) {
+          if (seen) {
+            input.checked = false;
+          } else {
+            seen = true;
+          }
+        }
+      });
+    };
+
+    typeSelect?.addEventListener('change', enforceSingleCorrect);
+    enforceSingleCorrect();
+
     optionsList.addEventListener('click', (event) => {
       if (event.target.classList.contains('remove-option')) {
         event.target.closest('.admin-option').remove();
@@ -240,6 +260,16 @@
         optionsList.appendChild(dragItem);
       } else {
         optionsList.insertBefore(dragItem, afterElement);
+      }
+    });
+
+    optionsList.addEventListener('change', (event) => {
+      const checkbox = event.target.closest('input[type="checkbox"][name*="[is_correct]"]');
+      if (!checkbox || !typeSelect) return;
+      if (['single', 'true_false'].includes(typeSelect.value) && checkbox.checked) {
+        optionsList.querySelectorAll('input[type="checkbox"][name*="[is_correct]"]').forEach((input) => {
+          if (input !== checkbox) input.checked = false;
+        });
       }
     });
   </script>

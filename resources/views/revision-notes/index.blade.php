@@ -45,7 +45,7 @@
           @php
             $icon = $iconMap[$topic->slug] ?? '&#x1F4D8;';
           @endphp
-          <a class="rn-tile" href="{{ route('revision-notes.topic', $topic) }}">
+          <a class="rn-tile" href="{{ route('revision-notes.topic', $topic->slug ?: $topic->id) }}">
             <span class="rn-ico">{!! $icon !!}</span>
             <span class="rn-name">{{ $topic->name }}</span>
           </a>

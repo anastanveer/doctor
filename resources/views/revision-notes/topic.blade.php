@@ -21,7 +21,7 @@
     <div class="container rn-wrap">
       <section class="rn-grid">
         @forelse ($notes as $note)
-          <a class="rn-tile" href="{{ route('revision-notes.show', [$topic, $note]) }}">
+          <a class="rn-tile" href="{{ route('revision-notes.show', [$topic->slug ?: $topic->id, $note->slug ?: $note->id]) }}">
             <span class="rn-ico">&#x1F4DD;</span>
             <span class="rn-name">{{ $note->title }}</span>
           </a>
